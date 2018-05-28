@@ -1,0 +1,17 @@
+/*common*/
+.wrapper {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+/*校园官网*/
+.swiper-container {
+    width: 100%;
+    height: 220px;
+}
+
+.swiper-container img {
+    display: block;
+    width: 100%;
+    height: 220px;
+}

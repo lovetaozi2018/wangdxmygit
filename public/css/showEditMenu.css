@@ -1,0 +1,349 @@
+li {
+    list-style: none;
+}
+
+.menu_left_panel {
+
+}
+
+.show_list {
+    border-top: 1px solid rgb(228, 230, 233);
+    padding: 0;
+}
+
+.show_item {
+    border-bottom: 1px solid rgb(228, 230, 233);
+    padding: 17px 8px 18px;
+}
+
+.show_item_addMenu {
+    height: 90px;
+    padding: 0;
+}
+
+.show_item_addMenu a {
+    display: block;
+    height: 100%;
+    line-height: 90px;
+    font-size: 18px;
+    text-indent: 8px;
+    font-weight: 300;
+}
+
+.show_item_publish {
+    padding-top: 25px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.show_item_publish .publish_note {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 15px;
+    margin-top: 9px;
+    font-size: 12px;
+    color: rgb(120, 120, 120);
+}
+
+.show_item_cnt {
+    position: relative;
+}
+
+.show_item_cnt_title {
+    color: rgb(120, 120, 120);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.show_item_cnt_menuName {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: rgb(55, 55, 55);
+}
+
+.show_item_cnt_menuName_first {
+    line-height: 28px;
+    font-size: 18px;
+}
+
+.show_item_cnt_editBtn {
+    position: absolute;
+    right: 9px;
+    top: 9px;
+}
+
+.menu_right_panel {
+    height: 500px;
+    overflow: hidden;
+}
+
+.preview_panel {
+    position: relative;
+    height: 500px;
+    width: 305px;
+    background: rgb(245, 247, 250);
+    overflow: hidden;
+}
+
+.preview_panel_header {
+    position: relative;
+    height: 42px;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    background-color: rgb(79, 119, 170);
+    line-height: 42px;
+}
+
+.preview_panel_header h3 {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 42px;
+    margin: 0;
+}
+
+.preview_panel_footerBar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40px;
+    background-color: rgb(250, 251, 253);
+    text-align: center;
+    margin-left: -1px;
+    border-top: 1px solid rgb(220, 221, 224);
+}
+
+.footerBar_itemMenu {
+    width: 100%;
+    float: left;
+}
+
+.footerBar_itemMenu a {
+    display: block;
+    line-height: 30px;
+    color: rgb(120, 120, 120);
+    cursor: default;
+    padding: 5px 3px;
+    border-left: 1px solid rgb(220, 221, 224);
+    text-decoration: none;
+}
+
+.previewPanel_subMenuWrap {
+    position: absolute;
+    min-width: 140px;
+    bottom: 50px;
+    background-color: rgb(255, 255, 255);
+    padding: 5px 0;
+    border-radius: 4px;
+    border: 1px solid rgb(205, 208, 215);
+    border-image: initial;
+}
+
+.previewPanel_subMenuWrap:before,
+.previewPanel_subMenuWrap:after {
+    display: block;
+    content: " ";
+    width: 0;
+    line-height: 0;
+    font-size: 0;
+    border-style: solid;
+    border-color: transparent;
+}
+
+.previewPanel_subMenuWrap:before {
+    position: absolute;
+    left: 50%;
+    margin-left: -6px;
+    bottom: -9px;
+    border-top-color: rgb(205, 208, 215);
+    border-width: 9px 6px 0;
+    border-bottom: 0;
+}
+
+.previewPanel_subMenuWrap:after {
+    position: absolute;
+    left: 50%;
+    margin-left: -5px;
+    bottom: -7px;
+    border-top-color: rgb(255, 255, 255);
+    border-width: 7px 5px 0;
+    border-bottom: 0;
+}
+
+/*一个菜单*/
+.footerBar_menuCount1 .footerBar_itemMenu {
+    width: 100%;
+}
+
+.footerBar_menuCount1 .previewPanel_subMenuWrap_Menu1 {
+    left: 81px;
+}
+
+/*两个菜单*/
+.footerBar_menuCount2 .footerBar_itemMenu {
+    width: 50%;
+}
+
+.footerBar_menuCount2 .previewPanel_subMenuWrap_Menu1 {
+    left: 6px;
+}
+
+.footerBar_menuCount2 .previewPanel_subMenuWrap_Menu2 {
+    right: 5px;
+}
+
+/*三个菜单*/
+.footerBar_menuCount3 .footerBar_itemMenu {
+    width: 33.33333%;
+}
+
+.footerBar_menuCount3 .previewPanel_subMenuWrap {
+    min-width: 0;
+    width: 98px;
+}
+
+.footerBar_menuCount3 .previewPanel_subMenuWrap_Menu1 {
+    left: 1px;
+}
+
+.footerBar_menuCount3 .previewPanel_subMenuWrap_Menu2 {
+    right: 104px;
+}
+
+.footerBar_menuCount3 .previewPanel_subMenuWrap_Menu3 {
+    right: 0;
+}
+
+.previewPanel_subMenu {
+    padding: 0 3px;
+}
+
+.previewPanel_subMenu a {
+    display: block;
+    padding: 8px 6px;
+    border-top: 1px solid #D8D8D8;
+    text-decoration: none;
+    color: #787878;
+    cursor: default;
+}
+
+.previewPanel_subMenu:first-child a {
+    border-top: none;
+}
+
+/*编辑菜单*/
+.edit_menu_container {
+    position: relative;
+    background-color: #F9F9FA;
+    padding: 0 15px 44px;
+    min-height: 490px;
+    width: 530px;
+    /*display: none;*/
+    display: inline-block;
+}
+
+.editMenu_header {
+    position: relative;
+    padding-top: 18px;
+}
+
+.editMenu_header_title {
+    display: inline-block;
+    margin-bottom: 4px;
+    margin-right: 10px;
+    font-size: 12px;
+    color: #787878;
+}
+
+.edit_text {
+    font-size: 12px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 30px;
+}
+
+/*错误提醒*/
+.editMenu_tips {
+    font-size: 12px;
+    color: #F05A5A;
+    min-height: 16px;
+    padding-top: 4px;
+    line-height: 16px;
+    display: none;
+}
+.del_menu{
+    position: absolute;
+    right: 1px;
+    top: 20px;
+    cursor: pointer;
+}
+.del_subMenu {
+    position: absolute;
+    right: 1px;
+    top: 20px;
+    cursor: pointer;
+}
+
+.editMenu_body {
+    padding-top: 12px;
+    margin-bottom: 12px;
+    min-height: 380px;
+}
+
+.menuInfoPanel {
+    position: relative;
+    padding: 0 14px;
+    margin-bottom: 12px;
+    background-color: #fff;
+}
+
+.menuInfoPanel_body {
+    padding-top: 18px;
+}
+
+.menuInfoPanel_item {
+    margin-top: 10px;
+}
+
+.menuInfoPanel_item:first-child {
+    margin-top: 0;
+}
+
+.menuInfoPanel_item_title {
+    float: left;
+    width: 80px;
+    margin-right: 8px;
+    text-align: right;
+    color: #787878;
+    line-height: 26px;
+}
+
+.menuInfoPanel_item_type {
+    display: inline-block;
+    width: 110px;
+    height: 26px;
+    line-height: 26px;
+    color: #555;
+}
+
+.menuInfoPanel_jumpType {
+    display: block;
+    margin-bottom: 0;
+}
+
+.menuInfoPanel_item_content {
+    overflow: hidden;
+    zoom: 1;
+}
+
+.menuInfoPanel_item_content input {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 26px;
+}
+
+.editMenu_addSubMenu {
+    font-size: 14px;
+}

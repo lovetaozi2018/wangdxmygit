@@ -1,0 +1,63 @@
+.stepFlex {
+    border-top: 5px solid transparent;
+    text-align: center;
+    margin: 30px auto;
+}
+
+.stepFlex dl {
+    position: relative;
+    width: 160px;
+    top: -5px;
+    border-top: 5px solid #f00;
+    float: left;
+    cursor: pointer;
+}
+
+.stepFlex dl.doing {
+    border-top: 5px solid #cccccc;
+}
+
+.stepFlex dl.success {
+    border-top: 5px solid #00a65a;
+}
+
+.stepFlex dl.fail {
+    border-top: 5px solid #f00;
+}
+
+.stepFlex dl .s-num {
+    position: relative;
+    margin: -15px auto 0;
+    color: #fff;
+    font-weight: 700;
+    width: 23px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #cccccc;
+    border-radius: 50%;
+    text-align: center;
+}
+
+.stepFlex dl.success .s-num {
+    background-color: #00a65a;
+}
+
+.stepFlex dl.fail .s-num {
+    background-color: #f00;
+}
+
+.stepFlex dl .s-text {
+    color: #555;
+}
+
+.stepFlex dl.success .s-text {
+    color: #00a65a;
+}
+
+.stepFlex dl.fail .s-text {
+    color: #f00;
+}
+
+.stepInfo .info-item {
+    display: none;
+}
