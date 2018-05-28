@@ -110,6 +110,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="{{ url('schools/index') }}"><i class="fa fa-circle-o"></i> 学校列表</a></li>
+                        <li><a href="{{ url('slides/index') }}"><i class="fa fa-circle-o"></i> 轮播图列表</a></li>
                         <li><a href="index2.html"><i class="fa fa-circle-o"></i> 学校介绍</a></li>
                         <li><a href="index3.html"><i class="fa fa-circle-o"></i> 学校视频</a></li>
                     </ul>

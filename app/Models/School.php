@@ -51,7 +51,7 @@ class School extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function pictures(){ return $this->hasMany('App\Models\Picture'); }
+    public function pictures(){ return $this->hasMany('App\Models\Slide'); }
 
 
     /**

@@ -3,19 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SchoolRequest;
-use App\Models\School;
-use App\Models\User;
+use App\Models\Slide;
 use Illuminate\Support\Facades\Request;
 
-class SchoolController extends Controller
+class SlideController extends Controller
 {
+    protected $slide;
 
-    protected $school;
+    function __construct(Slide $slide) {
 
-    function __construct(School $school) {
-        $this->school = $school;
-
+        $this->slide = $slide;
     }
 
 
@@ -25,11 +22,11 @@ class SchoolController extends Controller
     public function index()
     {
         if (Request::get('draw')) {
-            return response()->json($this->school->datatable());
+            return response()->json($this->slide->datatable());
 
         }
-        return view('admin.school.index', [
-            'js' => '../js/admin/school/index.js',
+        return view('admin.slide.index', [
+            'js' => '../js/admin/slide/index.js',
         ]);
     }
 

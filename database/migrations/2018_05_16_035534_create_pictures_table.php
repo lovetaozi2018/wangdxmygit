@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 class CreatePicturesTable extends Migration
 {
     /**
-     * 轮播图.
+     * 班级相册.
      *
      * @return void
      */
@@ -15,8 +15,8 @@ class CreatePicturesTable extends Migration
     {
         Schema::create('pictures', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('school_id')->comment('学校id');
-            $table->string('remark')->nullable()->comment('备注');
+            $table->integer('class_id')->comment('班级id');
+            $table->string('path')->comment('图片路径');
             $table->boolean('enabled');
             $table->timestamps();
         });

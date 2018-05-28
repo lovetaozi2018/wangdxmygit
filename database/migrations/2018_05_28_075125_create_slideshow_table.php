@@ -4,19 +4,19 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRecommendTable extends Migration
+class CreateSlideshowTable extends Migration
 {
     /**
-     * 学校介绍.
+     * 轮播图.
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('recommend', function (Blueprint $table) {
+        Schema::create('slideshow', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('school_id')->comment('学校id');
-            $table->longText('content')->comment('学校介绍');
+            $table->string('path')->comment('图片路径');
             $table->boolean('enabled');
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreateRecommendTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recommend');
+        Schema::dropIfExists('slideshow');
     }
 }

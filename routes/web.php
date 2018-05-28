@@ -33,6 +33,14 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::put('schools/update/{id}', 'SchoolController@update');
     Route::delete('schools/delete/{id}', 'SchoolController@delete');
 
+    # 轮播图管理
+    Route::get('slides/index', 'SlideController@index');
+    Route::get('slides/create', 'SlideController@create');
+    Route::post('slides/store', 'SlideController@store');
+    Route::get('slides/edit/{id}', 'SlideController@edit');
+    Route::put('slides/update/{id}', 'SlideController@update');
+    Route::delete('slides/delete/{id}', 'SlideController@delete');
+
     # 年级管理
     Route::get('grades/index', 'GradeController@index');
     Route::get('grades/create', 'GradeController@create');
