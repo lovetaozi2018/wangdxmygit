@@ -3,8 +3,28 @@
 namespace App\Models;
 
 use App\Helpers\Datatable;
+use Carbon\Carbon;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+
+/**
+ * App\Models\Slide 轮播图
+ *
+ * @property int $id
+ * @property int $school_id
+ * @property string|$path 路径
+ * @property int $enabled
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|Slide whereId($value)
+ * @method static Builder|Slide whereSchoolId($value)
+ * @method static Builder|Slide whereEnabled($value)
+ * @method static Builder|Slide whereCreatedAt($value)
+ * @method static Builder|Slide whereUpdatedAt($value)
+ * @mixin Eloquent
+ */
 class Slide extends Model
 {
     use Datatable;

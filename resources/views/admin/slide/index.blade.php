@@ -5,7 +5,7 @@
         <span id="breadcrumb" style="color: #999; font-size: 13px;">班级管理/班级列表</span>
         <div class="box-tools pull-right">
             <button id="add-record" type="button" class="btn btn-box-tool">
-                <a href="{{url('classes/create')}}"><i class="fa fa-plus text-blue"> 新增</i></a>
+                <a href="{{url('slides/create')}}"><i class="fa fa-plus text-blue"> 新增</i></a>
             </button>
         </div>
     </div>

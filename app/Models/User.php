@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -111,5 +112,43 @@ class User extends Authenticatable
 
 
         return $this->simple($this, $columns);
+    }
+
+    /**
+     * @param $file
+     * @param $filePath
+     * @return array|bool
+     */
+    public function uploadedMedias($file, $filePath) {
+
+        if ($file->isValid()) {
+            // 获取文件相关信息
+            # 文件原名
+            $originalName = $file->getClientOriginalName();
+            # 扩展名
+            $ext = $file->getClientOriginalExtension();
+            # 临时文件的绝对路径
+//            $realPath = $file->getRealPath();
+            // 上传文件
+            $filename = date("YmdHis") . '_' . str_random(5) . '.' . $ext;
+//            $filePath = public_path().'/uploads/';
+            if (!file_exists($filePath))
+            {
+                mkdir($filePath,0777,true);
+            }
+            if($file->move($filePath,$filename))
+            {
+                return [
+                    'path'     => $filePath,
+                    'type'     => $ext,
+                    'name'     => $originalName,
+                    'filename' => $filename,
+                ];
+            } else {
+                return false;
+            }
+
+        }
+        return false;
     }
 }

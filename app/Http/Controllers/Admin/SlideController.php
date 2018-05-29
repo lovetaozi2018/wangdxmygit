@@ -3,16 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\School;
 use App\Models\Slide;
+use App\Models\User;
 use Illuminate\Support\Facades\Request;
 
 class SlideController extends Controller
 {
     protected $slide;
+    protected $user;
 
-    function __construct(Slide $slide) {
+    function __construct(Slide $slide,User $user) {
 
         $this->slide = $slide;
+        $this->user = $user;
     }
 
 
@@ -33,23 +37,31 @@ class SlideController extends Controller
 
     public function create()
     {
-        return view('admin.school.create', [
-            'js' => '../js/admin/school/create.js',
+        return view('admin.slide.create', [
+            'js' => '../js/admin/slide/create.js',
+            'schools' => School::whereEnabled(1)->get()->pluck('name', 'id'),
         ]);
     }
 
 
-    /**
-     * 保存学校
-     *
-     * @param SchoolRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(SchoolRequest $request)
+
+    public function store()
     {
-        return $this->school->store($request->all()) ?
-            response()->json(['statusCode' => 200]):
-            response()->json(['statusCode' => 400]);
+       $file = Request::file('fileImg');
+       $input = Request::all();
+       $path = public_path().'/uploads/picture/';
+       foreach ($file as $v){
+           $image = $this->user->uploadedMedias($v,$path);
+           $data = [
+               'school_id'=> $input['school_id'],
+               'path'=> $image['filename'],
+               'enabled'=> $input['enabled'],
+           ];
+           Slide::create($data);
+       }
+//        return $this->slide->store($request->all()) ?
+//            response()->json(['statusCode' => 200]):
+//            response()->json(['statusCode' => 400]);
 
     }
 
