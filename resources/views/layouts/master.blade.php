@@ -188,6 +188,9 @@
 <script src="{{URL::asset('plugins/datatables/select/js/dataTables.select.min.js')}}"></script>
 <script src="{{URL::asset('plugins/datatables/buttons/js/dataTables.buttons.min.js')}}"></script>
 <script src="{{URL::asset('dist/js/app.js')}}"></script>
+
+<script type ="text/javascript" src="{{asset('plugins/kindeditor/kindeditor-all.js')}}"></script>
+<script type ="text/javascript" src="{{asset('plugins/kindeditor/zh-CN.js')}}"></script>
 {{--<script src="{{URL::asset('js/common.js')}}"></script>--}}
 <script src="{{$js}}"></script>
 <script>

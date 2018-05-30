@@ -13,7 +13,7 @@ function initDatatable() {
         ],
         scrollX: true,
         language: {url: '../files/ch.json'},
-        lengthMenu: [[15, 25, 50, -1], [15, 25, 50, '所有']]
+        lengthMenu: [[5, 10, 15, -1], [5, 10, 15, '所有']]
     });
 }
 initDatatable();

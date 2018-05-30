@@ -15,7 +15,7 @@ class CreateRecommendTable extends Migration
     {
         Schema::create('recommend', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('school_id')->comment('学校id');
+            $table->integer('school_id')->unique()->comment('学校id');
             $table->longText('content')->comment('学校介绍');
             $table->boolean('enabled');
             $table->timestamps();

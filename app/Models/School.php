@@ -45,6 +45,7 @@ class School extends Model
         return $this->hasMany('App\Models\Grade','school_id','id');
     }
 
+    public function recommend() { return $this->hasOne('App\Models\Recommend'); }
 
     /**
      * 学校的轮播图

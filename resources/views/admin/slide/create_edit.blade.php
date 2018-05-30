@@ -10,8 +10,8 @@
     <div class="box-body">
         <div class="form-horizontal">
             {{ csrf_field() }}
-            @if(isset($classes['id']))
-                {{ Form::hidden('id', $classes['id'], ['id' => 'id']) }}
+            @if(isset($slide['id']))
+                {{ Form::hidden('id', $slide['id'], ['id' => 'id']) }}
             @endif
             {{--<div class="form-group">--}}
                 {{--{{ Form::label('name', '班级名称', [--}}
@@ -48,10 +48,37 @@
                 </div>
             </div>
 
+            @if(isset($slide))
             <div class="form-group">
                 <label for="fileImg" class="col-sm-3 control-label">轮播图：</label>
                 <div class="col-sm-6">
-                    <input type="file" name="fileImg[]" id="fileImg" accept="image/gif, image/jpeg,image/png,image/jpg" multiple/>
+                    <input type="file" name="fileImg" id="fileImg" onchange="preview(this)" accept="image/gif, image/jpeg,image/png,image/jpg"/>
+                    <div id="preview">
+                        @if(isset($slide))
+                            <img src='{{asset("{$slide->path}")}}' style="height: 100px;margin-top: 5px;"/>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @else
+                <div class="form-group">
+                    <label for="fileImg" class="col-sm-3 control-label">轮播图：</label>
+                    <div class="col-sm-6">
+                        <input type="file" name="fileImg[]" id="fileImg" onchange="preview(this)" accept="image/gif, image/jpeg,image/png,image/jpg" multiple/>
+                        <div id="preview">
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            <div class="form-group">
+                <label for="content" class="col-sm-3 control-label">学校简介</label>
+                <div class="col-sm-6">
+                    <textarea id="content" name="content" style="width:100%;height:400px;">
+                        @if(isset($slide))
+                        {{$slide->school->recommend->content}}
+                        @endif
+                    </textarea>
                 </div>
             </div>
 
@@ -72,7 +99,7 @@
             @include('layouts.enabled', [
                 'label' => '是否启用',
                 'id' => 'enabled',
-                'value' => isset($classes['enabled']) ? $classes['enabled'] : NULL,
+                'value' => isset($slide['enabled']) ? $slide['enabled'] : NULL,
             ])
         </div>
     </div>

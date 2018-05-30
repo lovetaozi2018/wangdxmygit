@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Recommend;
 use App\Models\School;
 use App\Models\Slide;
 use App\Models\User;
@@ -35,6 +36,11 @@ class SlideController extends Controller
     }
 
 
+    /**
+     * 创建表单
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         return view('admin.slide.create', [
@@ -44,57 +50,52 @@ class SlideController extends Controller
     }
 
 
-
+    /**
+     * 保存
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function store()
     {
-       $file = Request::file('fileImg');
-       $input = Request::all();
-       $path = public_path().'/uploads/picture/';
-       foreach ($file as $v){
-           $image = $this->user->uploadedMedias($v,$path);
-           $data = [
-               'school_id'=> $input['school_id'],
-               'path'=> $image['filename'],
-               'enabled'=> $input['enabled'],
-           ];
-           Slide::create($data);
-       }
-//        return $this->slide->store($request->all()) ?
-//            response()->json(['statusCode' => 200]):
-//            response()->json(['statusCode' => 400]);
+        return $this->slide->store(Request::all()) ?
+            response()->json(['statusCode' => 200]):
+            response()->json(['statusCode' => 400]);
 
     }
 
     public function edit($id) {
 
-        $school = $this->school->find($id);
-        $school->mobile = User::whereSchoolId($id)->first()->mobile;
-        $school->realname = User::whereSchoolId($id)->first()->realname;
-
-        return view('admin.school.edit', [
-            'school' => $school,
-            'js' => '../../js/admin/school/edit.js',
+        $slide = $this->slide->find($id);
+        return view('admin.slide.edit', [
+            'slide' => $slide,
+            'schools' => School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'js' => '../../js/admin/slide/edit.js',
         ]);
-
 
     }
 
     /**
-     * 更新学校
+     * 更新轮播图
      *
-     * @param SchoolRequest $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function update(SchoolRequest $request, $id)
+    public function update( $id)
     {
-        return $this->school->modify($request->all(),$id) ?
+        return $this->slide->modify(Request::all(),$id) ?
             response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function delete($id) {
-        return $this->school->remove($id)
+        return $this->slide->remove($id)
             ? response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
     }
