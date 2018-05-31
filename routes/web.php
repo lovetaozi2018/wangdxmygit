@@ -57,6 +57,14 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::put('classes/update/{id}', 'SquadController@update');
     Route::delete('classes/delete/{id}', 'SquadController@delete');
 
+    # 班级相册管理
+    Route::get('pictures/index', 'PictureController@index');
+    Route::get('pictures/create', 'PictureController@create');
+    Route::post('pictures/store', 'PictureController@store');
+    Route::get('pictures/edit/{id}', 'PictureController@edit');
+    Route::post('pictures/update/{id}', 'PictureController@update');
+    Route::delete('pictures/delete/{id}', 'PictureController@delete');
+
     # 教师管理
     Route::get('teachers/index', 'TeacherController@index');
     Route::get('teachers/create', 'TeacherController@create');

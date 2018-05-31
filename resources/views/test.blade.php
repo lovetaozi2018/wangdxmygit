@@ -1,0 +1,1 @@
+{!! QrCode::format('png')->generate('Hello,LaravelAcademy!',public_path('uploads/qrcode.png')); !!}

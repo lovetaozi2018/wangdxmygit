@@ -16,6 +16,7 @@ class CreatePicturesTable extends Migration
         Schema::create('pictures', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('class_id')->comment('班级id');
+            $table->string('name')->comment('相册名字id');
             $table->string('path')->comment('图片路径');
             $table->boolean('enabled');
             $table->timestamps();

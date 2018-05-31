@@ -40,6 +40,8 @@ class Squad extends Model
 
     public function grade(){ return $this->belongsTo('App\Models\Grade'); }
 
+    public function pictures(){ return $this->hasMany('App\Models\Picture'); }
+
     public function students(){ return $this->hasMany('App\Models\Student'); }
 
     public function datatable() {

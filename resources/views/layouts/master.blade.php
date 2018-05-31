@@ -122,7 +122,7 @@
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="{{ url('classes/index') }}"><i class="fa fa-circle-o"></i> 班级列表</a></li>
-                        <li><a href="index.html"><i class="fa fa-circle-o"></i> 班级相册</a></li>
+                        <li><a href="{{ url('pictures/index') }}"><i class="fa fa-file-image-o"></i> 班级相册</a></li>
                         <li><a href="index2.html"><i class="fa fa-circle-o"></i> 班级视频</a></li>
                     </ul>
                 </li>

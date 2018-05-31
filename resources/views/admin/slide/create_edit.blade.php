@@ -71,6 +71,7 @@
                 </div>
             @endif
 
+
             <div class="form-group">
                 <label for="content" class="col-sm-3 control-label">学校简介</label>
                 <div class="col-sm-6">
