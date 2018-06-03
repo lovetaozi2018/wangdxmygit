@@ -11,6 +11,7 @@ $form.parsley().on('form:validated', function () {
         $.ajax({
             type: 'POST',
             dataType: 'json',
+
             url: '../admins/store',
             data: $form.serialize(),
             success: function (result) {

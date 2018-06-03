@@ -60,7 +60,7 @@ class School extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function videos(){ return $this->hasMany('APP\Models\Video'); }
+    public function videos(){ return $this->hasMany('APP\Models\SquadVideo'); }
 
     public function datatable() {
 

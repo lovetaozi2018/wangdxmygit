@@ -13,14 +13,7 @@ class CreateVideosTable extends Migration
      */
     public function up()
     {
-        Schema::create('videos', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('school_id')->comment('学校id');
-            $table->string('title')->comment('视频名称');
-            $table->string('path')->comment('视频路径');
-            $table->boolean('enabled');
-            $table->timestamps();
-        });
+
     }
 
     /**

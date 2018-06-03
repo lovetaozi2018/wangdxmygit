@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Picture;
 use App\Models\Squad;
+use App\Models\SquadVideo;
 use App\Models\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 
-class PictureController extends Controller
+class SquadVideoController extends Controller
 {
-    protected $picture;
+    protected $video;
     protected $user;
 
-    function __construct(Picture $picture,User $user) {
+    function __construct(SquadVideo $video, User $user) {
 //        $this->middleware(['auth']);
-        $this->picture = $picture;
+        $this->video = $video;
         $this->user = $user;
 
     }
@@ -28,11 +28,11 @@ class PictureController extends Controller
     public function index()
     {
         if (Request::get('draw')) {
-            return response()->json($this->picture->datatable());
+            return response()->json($this->video->datatable());
 
         }
-        return view('admin.picture.index', [
-            'js' => '../js/admin/picture/index.js',
+        return view('admin.class_video.index', [
+            'js' => '../js/admin/class_video/index.js',
         ]);
     }
 
@@ -47,9 +47,9 @@ class PictureController extends Controller
         foreach ($classes as $k=>$c){
             $classes[$k] = $c.'--'.Squad::find($k)->grade->school->name;
         }
-        return view('admin.picture.create', [
+        return view('admin.class_video.create', [
             'classes' =>  $classes,
-            'js' => '../js/admin/picture/create.js',
+            'js' => '../js/admin/class_video/create.js',
         ]);
     }
 
@@ -62,6 +62,8 @@ class PictureController extends Controller
      */
     public function store()
     {
+        echo '<pre>';
+        print_r(Request::all());exit;
         $pictures = $this->picture->store(Request::all());
         return $pictures ? response()->json(['statusCode'=>200 ]) :
             response()->json(['statusCode'=>400]);
@@ -108,7 +110,6 @@ class PictureController extends Controller
      *
      * @param $id
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
      */
     public function delete($id) {
         return $this->picture->remove($id)

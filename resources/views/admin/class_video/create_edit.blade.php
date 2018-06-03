@@ -10,11 +10,11 @@
     <div class="box-body">
         <div class="form-horizontal">
             {{ csrf_field() }}
-            @if(isset($picture['id']))
-                {{ Form::hidden('id', $picture['id'], ['id' => 'id']) }}
+            @if(isset($video['id']))
+                {{ Form::hidden('id', $video['id'], ['id' => 'id']) }}
             @endif
             <div class="form-group">
-                {{ Form::label('name', '相册名称', [
+                {{ Form::label('title', '视频名称', [
                     'class' => 'col-sm-3 control-label'
                 ]) }}
                 <div class="col-sm-6">
@@ -22,7 +22,7 @@
                         <div class="input-group-addon">
                             <i class="fa fa-weixin"></i>
                         </div>
-                        {{ Form::text('name', null, [
+                        {{ Form::text('title', null, [
                         'class' => 'form-control',
                         'required' => 'true',
                         'placeholder' => '(请填写用户名)',
@@ -48,33 +48,21 @@
                 </div>
             </div>
 
-            @if(isset($picture))
-                <div class="form-group">
-                    <label for="fileImg" class="col-sm-3 control-label">图片</label>
-                    <div class="col-sm-6">
-                        <input type="file" name="fileImg" id="fileImg" onchange="preview(this)" accept="image/gif, image/jpeg,image/png,image/jpg"/>
-                        <div id="preview">
-                            @if(isset($picture))
-                                <img src='{{asset("{$picture->path}")}}' style="height: 100px;margin-top: 5px;"/>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            @else
             <div class="form-group">
-                <label for="fileImg" class="col-sm-3 control-label">图片</label>
+                <label for="video" class="col-sm-3 control-label">视频：</label>
                 <div class="col-sm-6">
-                    <input type="file" name="fileImg[]" id="fileImg" onchange="preview(this)"
-                           accept="image/gif, image/jpeg,image/png,image/jpg" multiple/>
-                    <div id="preview">
+                    <input type="file" class='fileVideo' id="video" name="video">
+                    <div style="margin-top: 20px;display: none" id="progressBox">
+                        上传进度：
+                        <progress></progress>
+                        <span id="progress">0 bytes</span>
                     </div>
                 </div>
             </div>
-            @endif
             @include('layouts.enabled', [
                 'label' => '是否启用',
                 'id' => 'enabled',
-                'value' => isset($picture['enabled']) ? $picture['enabled'] : NULL,
+                'value' => isset($video['enabled']) ? $video['enabled'] : NULL,
             ])
         </div>
     </div>

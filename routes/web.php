@@ -24,7 +24,6 @@ Route::get('test', 'TestController@index');
 Route::group(['namespace' => 'Admin'], function () {
     Route::get('users/index', 'UserController@index');
 
-
     # 学校管理
     Route::get('schools/index', 'SchoolController@index');
     Route::get('schools/create', 'SchoolController@create');
@@ -64,6 +63,13 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('pictures/edit/{id}', 'PictureController@edit');
     Route::post('pictures/update/{id}', 'PictureController@update');
     Route::delete('pictures/delete/{id}', 'PictureController@delete');
+    # 班级视频
+    Route::get('squadVideos/index', 'SquadVideoController@index');
+    Route::get('squadVideos/create', 'SquadVideoController@create');
+    Route::post('squadVideos/store', 'SquadVideoController@store');
+    Route::get('squadVideos/edit/{id}', 'SquadVideoController@edit');
+    Route::post('squadVideos/update/{id}', 'SquadVideoController@update');
+    Route::delete('squadVideos/delete/{id}', 'SquadVideoController@delete');
 
     # 教师管理
     Route::get('teachers/index', 'TeacherController@index');

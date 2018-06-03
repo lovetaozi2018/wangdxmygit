@@ -44,6 +44,8 @@ class Squad extends Model
 
     public function students(){ return $this->hasMany('App\Models\Student'); }
 
+    public function squadVideos(){ return $this->hasMany('App\Models\SquadVideo'); }
+
     public function datatable() {
 
         $columns = [

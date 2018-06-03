@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Helpers\Datatable;
 use Carbon\Carbon;
 use Eloquent;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Picture 班级相册
@@ -32,7 +34,7 @@ class Picture extends Model
 
     protected $table='pictures';
 
-    protected $fillabe=['name','class_id','path','enabled'];
+    protected $fillable=['name','class_id','path','enabled'];
 
     /**
      * 返回轮播图的学校对象
@@ -59,16 +61,21 @@ class Picture extends Model
                 },
             ],
             [
-                'db'        => 'Picture.class_id', 'dt' => 2,
+                'db'        => 'Squad.name as classname', 'dt' => 2,
                 'formatter' => function($d){
                     return $d;
                 }
             ],
             [
                 'db'        => 'Picture.path', 'dt' => 3,
-                'formatter' => function($d){
-                    return $d;
-                }
+                'formatter' => function ($d) {
+                    if ($d) {
+                        $url = $_SERVER["REDIRECT_URL"];
+                        $temp = explode('/',$url);
+                        $d = '/'.$temp[1].'/'.$temp[2].$d;
+                    }
+                    return $d ? '<img src="' . $d . '" style="height: 100px;"/>' : '';
+                },
             ],
             ['db'        => 'Picture.created_at', 'dt' => 4],
             ['db'        => 'Picture.updated_at', 'dt' => 5],
@@ -84,6 +91,94 @@ class Picture extends Model
 
         ];
 
-        return $this->simple($this, $columns);
+        $joins = [
+            [
+                'table'      => 'classes',
+                'alias'      => 'Squad',
+                'type'       => 'INNER',
+                'conditions' => [
+                    'Squad.id = Picture.class_id',
+                ],
+            ]
+        ];
+
+        return $this->simple($this, $columns,$joins);
+    }
+
+    /**
+     * 保存班级相册图片
+     *
+     * @param array $input
+     * @return bool
+     * @throws Exception
+     */
+    public function store(array $input)
+    {
+        try {
+            DB::transaction(function () use ($input) {
+                $file = $input['fileImg'];
+                $path = public_path().'/uploads/picture/';
+                foreach ($file as $v){
+                    $image = User::uploadedMedias($v,$path);
+                    $data = [
+                        'name'=> $input['name'],
+                        'class_id'=> $input['class_id'],
+                        'path'=> '/uploads/picture/'.$image['filename'],
+                        'enabled'=> $input['enabled'],
+                    ];
+                    Picture::create($data);
+                }
+
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * 更新轮播图和学校简介
+     *
+     * @param array $data
+     * @param $id
+     * @return bool
+     * @throws Exception
+     */
+    public function modify(array $data, $id) {
+
+        $picture = Picture::find($id);
+        $file = $data['fileImg'];
+        # 原来的图片
+        $lastImg = public_path() . $picture->path;
+        $path = public_path() . '/uploads/picture/';
+        if ($file || sizeof($file) != 0) {
+            $image = User::uploadedMedias($file, $path);
+            $data['path'] = '/uploads/picture/' . $image['filename'];
+        }
+        $res = $picture->update($data);
+
+        if ($res) {
+            # 删除原来的图片
+            if ($file && is_file($lastImg)) {
+                unlink($lastImg);
+            }
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * 删除学校和管理员
+     *
+     * @param $id
+     * @return bool
+     * @throws Exception
+     */
+    public function remove($id) {
+        $picture = Picture::find($id);
+        return$picture->delete() ? true : false;
     }
 }

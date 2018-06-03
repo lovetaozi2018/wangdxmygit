@@ -152,10 +152,10 @@ class Slide extends Model
                     $image = User::uploadedMedias($file, $path);
                     $slideData['path'] = '/uploads/picture/' . $image['filename'];
                 }
-                Slide::whereId($id)->update($slideData);
+                $slide->update($slideData);
 
                 # 删除原来的图片
-                if (is_file($lastImg)) {
+                if ($file && is_file($lastImg)) {
                     unlink($lastImg);
                 }
 
