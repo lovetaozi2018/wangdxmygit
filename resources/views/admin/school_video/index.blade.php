@@ -2,10 +2,10 @@
 @section('content')
 <div class="box box-default box-solid">
     <div class="box-header with-border">
-        <span id="breadcrumb" style="color: #999; font-size: 13px;">班级视频/视频列表</span>
+        <span id="breadcrumb" style="color: #999; font-size: 13px;">学校视频/视频列表</span>
         <div class="box-tools pull-right">
             <button id="add-record" type="button" class="btn btn-box-tool">
-                <a href="{{url('squadVideos/create')}}"><i class="fa fa-plus text-blue"> 新增</i></a>
+                <a href="{{url('schoolVideos/create')}}"><i class="fa fa-plus text-blue"> 新增</i></a>
             </button>
         </div>
     </div>
@@ -15,7 +15,7 @@
             <thead>
             <tr class="bg-info">
                 <th>#</th>
-                <th>班级</th>
+                <th>学校</th>
                 <th>视频名称</th>
                 <th>图片</th>
                 <th>创建于</th>

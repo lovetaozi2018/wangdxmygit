@@ -9,43 +9,33 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Video 班级相册
+ * App\Models\SchoolVideo 学校视频
  *
  * @property int $id
  * @property string $title 视频名称
- * @property int $class_id
+ * @property int $school_id
  * @property string $path 备注
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder|SquadVideo whereId($value)
- * @method static Builder|SquadVideo whereTitle($value)
- * @method static Builder|SquadVideo whereClassId($value)
- * @method static Builder|SquadVideo whereEnabled($value)
- * @method static Builder|SquadVideo whereCreatedAt($value)
- * @method static Builder|SquadVideo whereUpdatedAt($value)
+ * @method static Builder|SchoolVideo whereId($value)
+ * @method static Builder|SchoolVideo whereTitle($value)
+ * @method static Builder|SchoolVideo whereSchoolId($value)
+ * @method static Builder|SchoolVideo whereEnabled($value)
+ * @method static Builder|SchoolVideo whereCreatedAt($value)
+ * @method static Builder|SchoolVideo whereUpdatedAt($value)
  * @mixin Eloquent
  */
-class SquadVideo extends Model
+class SchoolVideo extends Model
 {
     use Datatable;
 
-    protected $table = 'class_videos';
+    protected $table = 'school_videos';
 
     protected $fillable = [
-        'class_id', 'title', 'path', 'enabled'
+        'school_id', 'title', 'path', 'enabled'
     ];
 
-    public function squad()
-    {
-        return $this->belongsTo('App\Models\Squad');
-    }
-
-    /**
-     * 返回视频的学校对象
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function school()
     {
         return $this->belongsTo('App\Models\School');
@@ -56,31 +46,31 @@ class SquadVideo extends Model
 
         $columns = [
             [
-                'db' => 'SquadVideo.id', 'dt' => 0,
+                'db' => 'SchoolVideo.id', 'dt' => 0,
                 'formatter' => function ($d) {
                     return $d ? $d : '';
                 },
             ],
             [
-                'db' => 'Squad.name', 'dt' => 1,
+                'db' => 'School.name', 'dt' => 1,
                 'formatter' => function ($d) {
                     return $d ? '<span class="badge bg-blue">' . $d . '</span>' : '';
                 },
             ],
             [
-                'db' => 'SquadVideo.title', 'dt' => 2,
+                'db' => 'SchoolVideo.title', 'dt' => 2,
                 'formatter' => function ($d) {
                     return $d;
                 }
             ],
             [
-                'db' => 'SquadVideo.path', 'dt' => 3
+                'db' => 'SchoolVideo.path', 'dt' => 3
 
             ],
-            ['db' => 'SquadVideo.created_at', 'dt' => 4],
-            ['db' => 'SquadVideo.updated_at', 'dt' => 5],
+            ['db' => 'SchoolVideo.created_at', 'dt' => 4],
+            ['db' => 'SchoolVideo.updated_at', 'dt' => 5],
             [
-                'db' => 'SquadVideo.enabled', 'dt' => 6,
+                'db' => 'SchoolVideo.enabled', 'dt' => 6,
                 'formatter' => function ($d, $row) {
                     $status = '';
                     $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
@@ -93,11 +83,11 @@ class SquadVideo extends Model
 
         $joins = [
             [
-                'table' => 'classes',
-                'alias' => 'Squad',
+                'table' => 'schools',
+                'alias' => 'School',
                 'type' => 'INNER',
                 'conditions' => [
-                    'Squad.id = SquadVideo.class_id',
+                    'School.id = SchoolVideo.school_id',
                 ],
             ]
         ];
@@ -120,11 +110,11 @@ class SquadVideo extends Model
         $image = User::uploadedMedias($file, $path);
         $data = [
             'title' => $input['title'],
-            'class_id' => $input['class_id'],
+            'school_id' => $input['school_id'],
             'path' => '/uploads/video/' . $date . '/' . $image['filename'],
             'enabled' => $input['enabled'],
         ];
-        SquadVideo::create($data);
+        SchoolVideo::create($data);
 
         return true;
     }
@@ -138,22 +128,22 @@ class SquadVideo extends Model
      */
     public function modify(array $data, $id) {
 
-        $video = SquadVideo::find($id);
+        $schoolVideo = SchoolVideo::find($id);
         $file = $data['fileVideo'];
-        # 原来的图片
-        $lastImg = public_path() . $video->path;
+        # 原来的视频
+        $lastVideo = public_path() . $schoolVideo->path;
         $date= date('Ymd');
         $path = public_path() . '/uploads/video/'.$date.'/';
         if ($file || sizeof($file) != 0) {
             $files = User::uploadedMedias($file, $path);
             $data['path'] ='/uploads/video/'.$date.'/' . $files['filename'];
         }
-        $res = $video->update($data);
+        $res = $schoolVideo->update($data);
 
         if ($res) {
             # 删除原来的视频
-            if ($file && is_file($lastImg)) {
-                unlink($lastImg);
+            if ($file && is_file($lastVideo)) {
+                unlink($lastVideo);
             }
             return true;
         } else {
@@ -171,7 +161,7 @@ class SquadVideo extends Model
      */
     public function remove($id)
     {
-        $video = SquadVideo::find($id);
+        $video = SchoolVideo::find($id);
         # 原来的视频
         $file = public_path().$video->path;
         $res = $video->delete();

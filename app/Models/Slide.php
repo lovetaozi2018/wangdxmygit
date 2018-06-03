@@ -172,15 +172,24 @@ class Slide extends Model
     }
 
     /**
-     * 删除学校和管理员
+     * 删除轮播图
      *
      * @param $id
      * @return bool
-     * @throws Exception
      */
-    public function remove($id) {
-        return Slide::whereId($id)->delete() ? true : false;
+    public function remove($id)
+    {
+        $slide = Slide::find($id);
+        # 原来的图片
+        $image = public_path().$slide->path;
+        $res = $slide->delete();
+        if($res){
+            # 删除原来的图片
+            if (is_file($image)) { unlink($image); }
+            return true;
+        }else{
+            return false;
+        }
     }
-
 
 }

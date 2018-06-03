@@ -12,7 +12,7 @@ $('#save').on('click', function (e) {
     e.preventDefault();
     var formData = new FormData();
     var title = $('#title').val();
-    var classId = $('#class_id').val();
+    var schoolId = $('#school_id').val();
     var video = $('.fileVideo')[0].files[0];
 
     var enabled = $('#enabled').val();
@@ -33,7 +33,7 @@ $('#save').on('click', function (e) {
 
 
     formData.append("title", title);
-    formData.append("class_id", classId);
+    formData.append("school_id", schoolId);
     formData.append("fileVideo", video);
     formData.append('enabled',enabled);
     formData.append("_token", $('#csrf_token').attr('content'));
@@ -49,7 +49,7 @@ $('#save').on('click', function (e) {
             }
             return myXhr; //xhr对象返回给jQuery使用
         },
-        url: '../squadVideos/store',
+        url: '../schoolVideos/store',
 
         processData:false,
         contentType:false,

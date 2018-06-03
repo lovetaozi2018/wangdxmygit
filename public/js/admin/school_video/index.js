@@ -26,7 +26,7 @@ $(document).on('click', '.fa-trash', function () {
             type:'DELETE',
             dataType:'json',
             data:{ _token: $('#csrf_token').attr('content')},
-            url:'../squadVideos/delete/'+id,
+            url:'../schoolVideos/delete/'+id,
             success:function (result) {
                 if(result.statusCode === 200){
                     $.gritter.add({title: '操作结果', text: '删除成功', image:'../image/confirm.png'});

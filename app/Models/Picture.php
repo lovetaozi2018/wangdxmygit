@@ -171,14 +171,24 @@ class Picture extends Model
     }
 
     /**
-     * 删除学校和管理员
+     * 删除相册图片
      *
      * @param $id
      * @return bool
-     * @throws Exception
      */
-    public function remove($id) {
+    public function remove($id)
+    {
         $picture = Picture::find($id);
-        return$picture->delete() ? true : false;
+        # 原来的图片
+        $image = public_path().$picture->path;
+        $res = $picture->delete();
+        if($res){
+            # 删除原来的图片
+            if (is_file($image)) { unlink($image); }
+            return true;
+        }else{
+            return false;
+        }
     }
+
 }

@@ -60,15 +60,19 @@
                     'class' => 'col-sm-3 control-label'
                 ]) }}
                 <div class="col-sm-6">
-                    {{ Form::text('remark', null, [
-                    'class' => 'form-control',
-                    'required' => 'true',
-                    'placeholder' => '(可填)',
-                    'data-parsley-length' => '[2, 255]'
-                ]) }}
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        {{ Form::text('remark', null, [
+                        'class' => 'form-control',
+                        'required' => 'true',
+                        'placeholder' => '(可填)',
+                        'data-parsley-length' => '[2, 255]'
+                    ]) }}
+                    </div>
                 </div>
             </div>
-
             @include('layouts.enabled', [
                 'label' => '是否启用',
                 'id' => 'enabled',

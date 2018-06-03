@@ -62,9 +62,8 @@ class SquadVideoController extends Controller
      */
     public function store()
     {
-        echo '<pre>';
-        print_r(Request::all());exit;
-        $pictures = $this->picture->store(Request::all());
+
+        $pictures = $this->video->store(Request::all());
         return $pictures ? response()->json(['statusCode'=>200 ]) :
             response()->json(['statusCode'=>400]);
     }
@@ -77,30 +76,30 @@ class SquadVideoController extends Controller
      */
     public function edit($id) {
 
-        $picture = $this->picture->find($id);
+        $video = $this->video->find($id);
         $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
         foreach ($classes as $k=>$c){
             $classes[$k] = $c.'--'.Squad::find($k)->grade->school->name;
         }
-        return view('admin.picture.edit', [
-            'picture' =>  $picture,
+        return view('admin.class_video.edit', [
+            'video' =>  $video,
             'classes' =>  $classes,
-            'js'    => '../../js/admin/picture/edit.js',
+            'js'    => '../../js/admin/class_video/edit.js',
         ]);
 
 
     }
 
+
     /**
-     * 更新
+     * 更新视频
      *
      * @param $id
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
      */
-    public function update( $id)
+    public function update($id)
     {
-        $res = $this->picture->modify(Request::all(),$id);
+        $res = $this->video->modify(Request::all(),$id);
         return $res ? response()->json(['statusCode'=>200 ]) :
             response()->json(['statusCode'=>400]);
     }
@@ -112,7 +111,7 @@ class SquadVideoController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete($id) {
-        return $this->picture->remove($id)
+        return $this->video->remove($id)
             ? response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
     }

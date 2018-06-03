@@ -10,8 +10,8 @@
     <div class="box-body">
         <div class="form-horizontal">
             {{ csrf_field() }}
-            @if(isset($video['id']))
-                {{ Form::hidden('id', $video['id'], ['id' => 'id']) }}
+            @if(isset($schoolVideo['id']))
+                {{ Form::hidden('id', $schoolVideo['id'], ['id' => 'id']) }}
             @endif
             <div class="form-group">
                 {{ Form::label('title', '视频名称', [
@@ -20,19 +20,19 @@
                 <div class="col-sm-6">
                     <div class="input-group">
                         <div class="input-group-addon">
-                            <i class="fa fa-weixin"></i>
+                            <i class="fa fa-group"></i>
                         </div>
                         {{ Form::text('title', null, [
                         'class' => 'form-control',
                         'required' => 'true',
-                        'placeholder' => '(请填写用户名)',
+                        'placeholder' => '(请填写视频名称)',
                         'data-parsley-length' => '[2, 255]'
                     ]) }}
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('class_id', '班级', [
+                {!! Form::label('school_id', '学校', [
                     'class' => 'col-sm-3 control-label',
                 ]) !!}
                 <div class="col-sm-6">
@@ -40,7 +40,7 @@
                         <div class="input-group-addon">
                             <i class="fa fa-object-group "></i>
                         </div>
-                        {!! Form::select('class_id', $classes, null, [
+                        {!! Form::select('school_id', $schools, null, [
                             'class' => 'form-control select2',
                             'style' => 'width: 100%;'
                         ]) !!}
@@ -62,7 +62,7 @@
             @include('layouts.enabled', [
                 'label' => '是否启用',
                 'id' => 'enabled',
-                'value' => isset($video['enabled']) ? $video['enabled'] : NULL,
+                'value' => isset($schoolVideo['enabled']) ? $schoolVideo['enabled'] : NULL,
             ])
         </div>
     </div>

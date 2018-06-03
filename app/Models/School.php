@@ -62,6 +62,8 @@ class School extends Model
      */
     public function videos(){ return $this->hasMany('APP\Models\SquadVideo'); }
 
+    public function schoolVideos(){ return $this->hasMany('APP\Models\SchoolVideo'); }
+
     public function datatable() {
 
         $columns = [

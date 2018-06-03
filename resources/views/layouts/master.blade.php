@@ -89,30 +89,27 @@
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li id="partners">
-                    <a href="{{url('partners/index')}}"><i class="fa fa-comments"></i> <span>登录页</span></a>
-                </li>
                 <li id="index">
                     <a href="#"><i class="fa fa-comments"></i> <span>主页</span></a>
                 </li>
                 <li id="grades">
-                    <a href="{{url('grades/index')}}"><i class="fa fa-comments"></i> <span>年级管理</span></a>
+                    <a href="{{url('grades/index')}}"><i class="fa fa-group"></i> <span>年级管理</span></a>
                 </li>
                 <li id="teachers">
-                    <a href="{{url('teachers/index')}}"><i class="fa fa-comments"></i> <span>教师管理</span></a>
+                    <a href="{{url('teachers/index')}}"><i class="fa  fa-street-view"></i> <span>教师管理</span></a>
                 </li>
                 <li id="students">
                     <a href="{{url('students/index')}}"><i class="fa fa-gear "></i> <span>学生管理</span></a>
                 </li>
                 <li id="users" class="treeview">
-                    <a href="#"><i class="fa fa-wechat fa-dashboard"></i> <span>学校管理</span>
+                    <a href="#"><i class="fa  fa-graduation-cap fa-dashboard"></i> <span>学校管理</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="{{ url('schools/index') }}"><i class="fa fa-circle-o"></i> 学校列表</a></li>
                         <li><a href="{{ url('slides/index') }}"><i class="fa fa-circle-o"></i> 轮播图列表</a></li>
                         <li><a href="index2.html"><i class="fa fa-circle-o"></i> 学校介绍</a></li>
-                        <li><a href="index3.html"><i class="fa fa-circle-o"></i> 学校视频</a></li>
+                        <li><a href="{{ url('schoolVideos/index') }}"><i class="fa fa-circle-o"></i> 学校视频</a></li>
                     </ul>
                 </li>
 

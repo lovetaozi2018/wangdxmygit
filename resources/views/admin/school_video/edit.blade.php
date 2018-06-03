@@ -1,10 +1,10 @@
 @extends('layouts.master')
 @section('content')
-    {!! Form::model($video,[
+    {!! Form::model($schoolVideo,[
         'method' => 'PUT',
-        'id' => 'formSquadVideo',
+        'id' => 'formSchoolVideo',
         'data-parsley-validate' => 'true'
     ]) !!}
-    @include('admin.class_video.create_edit')
+    @include('admin.school_video.create_edit')
     {!! Form::close() !!}
 @endsection

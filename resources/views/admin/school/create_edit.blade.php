@@ -18,25 +18,36 @@
                     'class' => 'col-sm-3 control-label'
                 ]) }}
                 <div class="col-sm-6">
-                    {{ Form::text('name', null, [
-                    'class' => 'form-control',
-                    'required' => 'true',
-                    'placeholder' => '(请填写名称)',
-                    'data-parsley-length' => '[2, 255]'
-                ]) }}
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-heart-o"></i>
+                        </div>
+                        {{ Form::text('name', null, [
+                        'class' => 'form-control',
+                        'required' => 'true',
+                        'placeholder' => '(请填写名称)',
+                        'data-parsley-length' => '[2, 255]'
+                    ]) }}
+                    </div>
                 </div>
             </div>
+
             <div class="form-group">
                 {{ Form::label('address', '地址', [
                     'class' => 'col-sm-3 control-label'
                 ]) }}
                 <div class="col-sm-6">
-                    {{ Form::text('address', null, [
-                    'class' => 'form-control',
-                    'required' => 'true',
-                    'placeholder' => '(请填写地址)',
-                    'data-parsley-length' => '[2, 255]'
-                ]) }}
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-location-arrow"></i>
+                        </div>
+                        {{ Form::text('address', null, [
+                        'class' => 'form-control',
+                        'required' => 'true',
+                        'placeholder' => '(请填写地址)',
+                        'data-parsley-length' => '[2, 255]'
+                    ]) }}
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -44,6 +55,10 @@
                 'class' => 'col-sm-3 control-label'
                 ]) }}
                 <div class="col-sm-6">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-user"></i>
+                        </div>
                     {{ Form::text('realname', null, [
                         'class' => 'form-control',
                         'required' => 'true',
@@ -52,7 +67,7 @@
                     ]) }}
                 </div>
             </div>
-
+            </div>
             <div class="form-group">
                 {{ Form::label('mobile', '手机号码', [
                     'class' => 'col-sm-3 control-label'
@@ -60,7 +75,7 @@
                 <div class="col-sm-6">
                     <div class="input-group">
                         <div class="input-group-addon">
-                            <i class="fa phone"></i>
+                            <i class="fa fa-phone"></i>
                         </div>
                         {{ Form::text('mobile', null, [
                             'class' => 'form-control',

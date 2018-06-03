@@ -32,6 +32,14 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::put('schools/update/{id}', 'SchoolController@update');
     Route::delete('schools/delete/{id}', 'SchoolController@delete');
 
+    # 学校视频
+    Route::get('schoolVideos/index', 'SchoolVideoController@index');
+    Route::get('schoolVideos/create', 'SchoolVideoController@create');
+    Route::post('schoolVideos/store', 'SchoolVideoController@store');
+    Route::get('schoolVideos/edit/{id}', 'SchoolVideoController@edit');
+    Route::post('schoolVideos/update/{id}', 'SchoolVideoController@update');
+    Route::delete('schoolVideos/delete/{id}', 'SchoolVideoController@delete');
+
     # 轮播图管理
     Route::get('slides/index', 'SlideController@index');
     Route::get('slides/create', 'SlideController@create');
@@ -90,3 +98,6 @@ Route::group(['namespace' => 'Admin'], function () {
 //Route::namespace('admin')->group(function () {
 //    Route::get('users/index', 'UserController@index');
 //});
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

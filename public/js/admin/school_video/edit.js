@@ -4,6 +4,11 @@ $(document).ready(function() {
     $('.select2').select2();
 });
 
+
+$(document).ready(function() {
+    $('.select2').select2();
+});
+
 var $form = $('#formSlide');
 $('#save').on('click', function (e) {
     if($('#video').val()!==''){
@@ -12,7 +17,7 @@ $('#save').on('click', function (e) {
     e.preventDefault();
     var formData = new FormData();
     var title = $('#title').val();
-    var classId = $('#class_id').val();
+    var schoolId = $('#school_id').val();
     var video = $('.fileVideo')[0].files[0];
 
     var enabled = $('#enabled').val();
@@ -22,19 +27,15 @@ $('#save').on('click', function (e) {
         enabled = 0;
     }
 
-    if(!title){
-        $.gritter.add({title: '操作结果', text: '名称不能为空', image:'../image/failure.jpg'});
-        return false;
-    }
-    if(!video){
-        $.gritter.add({title: '操作结果', text: '请上传视频', image:'../image/failure.jpg'});
-        return false;
-    }
+    // console.log(img);return false;
+    if (!video) {
+        video= '';
 
+    }
 
     formData.append("title", title);
-    formData.append("class_id", classId);
     formData.append("fileVideo", video);
+    formData.append("schoolId", schoolId);
     formData.append('enabled',enabled);
     formData.append("_token", $('#csrf_token').attr('content'));
 
@@ -49,23 +50,19 @@ $('#save').on('click', function (e) {
             }
             return myXhr; //xhr对象返回给jQuery使用
         },
-        url: '../squadVideos/store',
-
+        url: '../update/' + $('#id').val(),
         processData:false,
         contentType:false,
         data:formData,
         success: function (result) {
             if (result.statusCode === 200) {
-                $.gritter.add({title: '操作结果', text: '添加成功', image:'../image/confirm.png'});
+                $.gritter.add({title: '操作结果', text: '更新成功', image:'../../image/confirm.png'});
             } else {
-                $.gritter.add({title: '操作结果', text: '添加失败', image:'../image/failure.jpg'});
+                $.gritter.add({title: '操作结果', text: '更新失败', image:'../../image/failure.jpg'});
             }
         },
         error: function (result) {
-            // var name = JSON.parse(result.responseText).errors.name;
-            // if(name =='The name has already been taken.'){
-            //     $.gritter.add({title: '操作结果', text: '该学校下的年级已经存在', image:'../image/failure.jpg'});
-            // }
+
         }
     });
 });
@@ -78,31 +75,27 @@ function progressHandlingFunction(e) {
         $('#progress').html(e.loaded + "/" + e.total+" bytes. " + percent.toFixed(2) + "%");
     }
 }
-// $form.parsley().on('form:validated', function () {
-//     if($('.parsley-error').length === 0) {
-// //
+// $form.parsley().on('form:validated', function() {
+//
+//     if ($('.parsley-error').length === 0) {
 //         $.ajax({
-//             type: 'POST',
+//             type: 'PUT',
 //             dataType: 'json',
-//             url: '../slides/store',
-//             data: $form.serialize(),
-//             success: function (result) {
+//             url: '../update/' + $('#id').val(),
+//             data:  $form.serialize(),
+//             success: function(result) {
 //                 if (result.statusCode === 200) {
-//                     $.gritter.add({title: '操作结果', text: '添加成功', image:'../image/confirm.png'});
+//                     $.gritter.add({title: '操作结果', text: '更新成功', image:'../../image/confirm.png'});
 //                 } else {
-//                     $.gritter.add({title: '操作结果', text: '添加失败', image:'../image/failure.jpg'});
+//                     $.gritter.add({title: '操作结果', text: '更新失败', image:'../../image/failure.png'});
 //                 }
 //             },
-//             error: function (result) {
-//                 var name = JSON.parse(result.responseText).errors.name;
+//             error: function (e) {
+//                 var name = JSON.parse(e.responseText).errors.name;
 //                 if(name =='The name has already been taken.'){
-//                     $.gritter.add({title: '操作结果', text: '该学校下的年级已经存在', image:'../image/failure.jpg'});
+//                     $.gritter.add({title: '操作结果', text: '该学校下的年级已经存在', image:'../../image/failure.jpg'});
 //                 }
 //             }
 //         });
-    // }
-// }).on('form:submit', function () {
-//     return false;
-// });
-
-
+//     }
+// }).on('form:submit', function() { return false; });
