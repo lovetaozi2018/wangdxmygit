@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 
 /**
@@ -42,4 +43,17 @@ class SquadMessage extends Model
     public function student(){ return $this->belongsTo('App\Models\Student'); }
 
     public function squad() { return $this->belongsTo('App\Models\Squad','class_id','id'); }
+
+    /**
+     * 保存留言
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function store(array $data)
+    {
+        $data['student_id'] = Student::whereUserId(Auth::id())->first()->id;
+        $res = SquadMessage::create($data);
+        return $res ? true : false;
+    }
 }

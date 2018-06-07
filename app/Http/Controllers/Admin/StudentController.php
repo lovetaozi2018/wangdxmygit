@@ -103,8 +103,6 @@ class StudentController extends Controller
      */
     public function update(StudentRequest $request, $id)
     {
-//        echo '<pre>';
-//        print_r($request->all());exit;
         return $this->student->modify($request->all(),$id) ?
             response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);

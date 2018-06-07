@@ -20,12 +20,12 @@ use Illuminate\Support\Facades\DB;
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder|User whereId($value)
- * @method static Builder|User whereName($value)
- * @method static Builder|User whereAddress($value)
- * @method static Builder|User whereEnabled($value)
- * @method static Builder|User whereCreatedAt($value)
- * @method static Builder|User whereUpdatedAt($value)
+ * @method static Builder|School whereId($value)
+ * @method static Builder|School whereName($value)
+ * @method static Builder|School whereAddress($value)
+ * @method static Builder|School whereEnabled($value)
+ * @method static Builder|School whereCreatedAt($value)
+ * @method static Builder|School whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class School extends Model
