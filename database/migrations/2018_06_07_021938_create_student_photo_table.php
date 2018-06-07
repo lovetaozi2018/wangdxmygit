@@ -4,20 +4,20 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMessagesTable extends Migration
+class CreateStudentPhotoTable extends Migration
 {
     /**
-     * Run the migrations.
+     * 同学相册
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('student_photo', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('student_id')->comment('学生id');
-            $table->text('content')->comment('留言内容');
-            $table->boolean('enabled');
+            $table->string('path')->comment('图片路径');
+            $table->boolean('enabled')->default(1);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('student_photo');
     }
 }

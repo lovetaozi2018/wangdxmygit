@@ -42,9 +42,16 @@ class Squad extends Model
 
     public function pictures(){ return $this->hasMany('App\Models\Picture'); }
 
-    public function students(){ return $this->hasMany('App\Models\Student'); }
+    public function students(){ return $this->hasMany('App\Models\Student','class_id','id'); }
 
     public function squadVideos(){ return $this->hasMany('App\Models\SquadVideo'); }
+
+    /**
+     * 返回班级的留言
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function squadMessages(){ return $this->hasMany('App\Models\SquadMessage','class_id','id');}
 
     public function datatable() {
 
@@ -111,7 +118,9 @@ class Squad extends Model
      */
     public function store(array $data)
     {
-        $data['teacher_ids'] = implode(',',$data['teacher_ids']);
+        if(isset($data['teacher_ids'])){
+            $data['teacher_ids'] = implode(',',$data['teacher_ids']);
+        }
 
         return $this->create($data) ? true : false;
     }

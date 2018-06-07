@@ -53,7 +53,7 @@ class Student extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function messages(){ return $this->hasMany('App\Models\Message'); }
+    public function messages(){ return $this->hasMany('App\Models\SquadMessage'); }
 
 
     /**
@@ -63,7 +63,14 @@ class Student extends Model
      */
     public function user(){ return $this->belongsTo('App\Models\User'); }
 
-    public function squad(){ return $this->belongsTo('App\Models\Squad'); }
+    public function squad(){ return $this->belongsTo('App\Models\Squad','class_id','id'); }
+
+    /**
+     * 返回同学相册
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studentPhotos(){ return $this->hasMany('App\Models\StudentPhoto'); }
 
 
     public function datatable() {

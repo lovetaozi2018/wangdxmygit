@@ -8,6 +8,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\UploadedFile;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -15,7 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  *
  * @mixin \Eloquent
  * @property int $id
- * @property string|null $username 用户名
+ * @property string $username 用户名
  * @property string $realname 真实姓名
  * @property string $password 密码
  * @property int $role_id 角色ID
@@ -31,7 +32,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property \Carbon\Carbon|null $updated_at 更新于
  * @property int $enabled 状态
  * @method static Builder|User whereId($value)
- * @method static Builder|User whereUserName($value)
+ * @method static Builder|User whereUsername($value)
  * @method static Builder|User whereRealName($value)
  * @method static Builder|User whereRoleId($value)
  * @method static Builder|User whereGender($value)
@@ -47,7 +48,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens,Notifiable;
     use Datatable;
 
     /**
@@ -70,6 +71,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function findForPassport($username) {
+        return $this->where('username', $username)->orWhere('mobile',$username)->first();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -85,6 +90,16 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+
+    /**
+     * 返回被留言学生的留言信息
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studentMessages(){
+        return $this->hasMany('App\Models\StudentMessage');
+    }
+
     public function role(){ return $this->belongsTo('App\Models\Role'); }
 
 
@@ -98,14 +113,32 @@ class User extends Authenticatable
                 },
             ],
             [
-                'db'        => 'User.username', 'dt' => 1,
+                'db'        => 'User.realname', 'dt' => 1,
                 'formatter' => function ( $d ) {
                     return $d ? '<span class="badge bg-blue">' . $d . '</span>' : '';
                 },
             ],
+            ['db'        => 'User.username', 'dt' => 2],
             [
-                'db'        => 'User.realname', 'dt' => 2,
-
+                'db' => 'User.gender', 'dt' => 3,
+                'formatter' => function ($d) {
+                    return $d == 1 ? '<i class="fa fa-mars"></i>' : '<i class="fa fa-venus"></i>';
+                }
+            ],
+            ['db'        => 'User.mobile', 'dt' => 4],
+            [
+                'db'        => 'User.role_id', 'dt' => 5
+            ],
+            ['db'        => 'User.created_at', 'dt' => 6],
+            ['db'        => 'User.updated_at', 'dt' => 7],
+            [
+                'db'        => 'User.enabled', 'dt' => 8,
+                'formatter' => function ($d, $row) {
+                    $status = '';
+                    $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
+                    $status .= '&nbsp;<a id=' . $row['id'] . ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal"><i class="fa fa-trash"></i></a>';
+                    return $status;
+                },
             ],
 
         ];

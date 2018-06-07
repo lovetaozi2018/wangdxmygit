@@ -4,21 +4,21 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClassesTable extends Migration
+class CreateClassMessageBoardTable extends Migration
 {
     /**
-     * Run the migrations.
+     *
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('classes', function (Blueprint $table) {
+        Schema::create('class_message_board', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->comment('班级名称');
-            $table->integer('grade_id')->comment('年级id');
-            $table->string('teacher_ids')->nullable()->comment('教师id');
-            $table->string('remark')->nullable()->comment('备注');
+            $table->integer('class_id')->comment('班级id');
+            $table->integer('student_id')->comment('学生id');
+            $table->text('content')->comment('留言内容');
+            $table->integer('hints')->default(0)->comment('点击量');
             $table->boolean('enabled');
             $table->timestamps();
         });
@@ -31,6 +31,6 @@ class CreateClassesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('classes');
+        Schema::dropIfExists('class_message_board');
     }
 }

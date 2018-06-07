@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="{{URL::asset('plugins/datatables/datatables.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('plugins/datatables/select/css/select.dataTables.min.css')}}">
     <!-- iCheck-->
-    <link rel="stylesheet" href="{{URL::asset('plugins/icheck/all.css')}}">
+    <link rel="stylesheet" href="{{URL::asset('plugins/iCheck/all.css')}}">
 
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
@@ -108,7 +108,7 @@
                     <ul class="treeview-menu">
                         <li><a href="{{ url('schools/index') }}"><i class="fa fa-circle-o"></i> 学校列表</a></li>
                         <li><a href="{{ url('slides/index') }}"><i class="fa fa-circle-o"></i> 轮播图列表</a></li>
-                        <li><a href="index2.html"><i class="fa fa-circle-o"></i> 学校介绍</a></li>
+                        {{--<li><a href="index2.html"><i class="fa fa-circle-o"></i> 学校介绍</a></li>--}}
                         <li><a href="{{ url('schoolVideos/index') }}"><i class="fa fa-circle-o"></i> 学校视频</a></li>
                     </ul>
                 </li>
@@ -130,7 +130,7 @@
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> 修改密码</a></li>
+                        <li class="active"><a href="{{ url('users/reset') }}"><i class="fa fa-circle-o"></i> 修改密码</a></li>
                     </ul>
                 </li>
 
@@ -177,7 +177,7 @@
 <script src="{{ URL::asset('plugins/parsley/i18n/zh_cn.js') }}"></script>
 <script src="{{ URL::asset('plugins/parsley/i18n/zh_cn.extra.js') }}"></script>
 <script src="{{URL::asset('js/switcher.init.js')}}"></script>
-<script src="{{URL::asset('plugins/icheck/icheck.min.js')}}"></script>
+<script src="{{URL::asset('plugins/iCheck/icheck.min.js')}}"></script>
 
 <script src="{{ URL::asset('plugins/jstree/dist/jstree.min.js') }}"></script>
 <script src="{{ URL::asset('plugins/gritter/js/jquery.gritter.min.js') }}"></script>

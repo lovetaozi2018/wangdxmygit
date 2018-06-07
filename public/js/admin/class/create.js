@@ -19,10 +19,10 @@ $form.parsley().on('form:validated', function () {
                 }
             },
             error: function (result) {
-               var name = JSON.parse(result.responseText).errors.name;
-               if(name =='The name has already been taken.'){
-                   $.gritter.add({title: '操作结果', text: '该学校下的年级已经存在', image:'../image/failure.jpg'});
-               }
+               // var name = JSON.parse(result.responseText).errors.name;
+               // if(name =='The name has already been taken.'){
+               //     $.gritter.add({title: '操作结果', text: '该学校下的年级已经存在', image:'../image/failure.jpg'});
+               // }
             }
         });
     }

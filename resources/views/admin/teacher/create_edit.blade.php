@@ -76,6 +76,41 @@
                 </div>
             </div>
             <div class="form-group">
+                {{ Form::label('qq', 'QQ', [
+                    'class' => 'col-sm-3 control-label'
+                ]) }}
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-qq"></i>
+                        </div>
+                        {{ Form::text('qq', null, [
+                            'class' => 'form-control',
+                            'data-parsley-length'=> '[5,10]',
+                            'data-parsley-type' => 'integer',
+                            'placeholder' => '(请输入qq号码)',
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                {{ Form::label('wechat', '微信号', [
+                    'class' => 'col-sm-3 control-label'
+                ]) }}
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-wechat"></i>
+                        </div>
+                        {{ Form::text('wechat', null, [
+                            'class' => 'form-control',
+                            'data-parsley-length'=> '[2,32]',
+                            'placeholder' => '(请输入微信号)',
+                        ]) }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
                 {{ Form::label('remark', '备注', [
                     'class' => 'col-sm-3 control-label'
                 ]) }}

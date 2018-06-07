@@ -15,14 +15,14 @@
             <thead>
             <tr class="bg-info">
                 <th>#</th>
-                <th>用户名</th>
                 <th>真实姓名</th>
-                {{--<th>性别</th>--}}
-                {{--<th>角色</th>--}}
-                {{--<th>手机号码</th>--}}
-                {{--<th>创建时间</th>--}}
-                {{--<th>更新时间</th>--}}
-                {{--<th>状态</th>--}}
+                <th>用户名</th>
+                <th>性别</th>
+                <th>手机号码</th>
+                <th>角色</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+                <th>状态</th>
             </tr>
             </thead>
             <tbody></tbody>

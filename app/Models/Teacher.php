@@ -128,6 +128,8 @@ class Teacher extends Model
                     'realname' => $data['realname'],
                     'password' => bcrypt('12345678'),
                     'role_id' => 3, //老师
+                    'qq' => $data['qq'],
+                    'wechat' => $data['wechat'],
                     'gender' => $data['gender'],
                     'mobile' => $data['mobile'],
                     'enabled' => 1,

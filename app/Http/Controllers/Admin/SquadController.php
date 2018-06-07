@@ -46,7 +46,6 @@ class SquadController extends Controller
     public function create()
     {
         $data = Teacher::with('user')
-            ->where('school_id', 1)
             ->get()->toArray();
         $teachers = [];
         if (!empty($data)) {
@@ -77,7 +76,6 @@ class SquadController extends Controller
      */
     public function store(SquadRequest $request)
     {
-
         return $this->squad->store($request->all()) ?
             response()->json(['statusCode' => 200]):
             response()->json(['statusCode' => 400]);
@@ -92,9 +90,9 @@ class SquadController extends Controller
      */
     public function edit($id) {
 
+        $selectedTeachers = [];
         # 获取老师
         $data = Teacher::with('user')
-            ->where('school_id', 1)
             ->get()->toArray();
         $teachers = [];
         if (!empty($data)) {
@@ -112,12 +110,15 @@ class SquadController extends Controller
         }
         # 班级
         $classes = $this->squad->find($id);
-        $teacherIds = explode(',',$classes->teacher_ids);
-        #  获取被选中的老师
-        foreach ($teacherIds as $id) {
-            $teacher = Teacher::find($id);
-            $selectedTeachers[$id] = $teacher->user->realname;
+        if($classes->teacher_ids){
+            $teacherIds = explode(',',$classes->teacher_ids);
+            #  获取被选中的老师
+            foreach ($teacherIds as $id) {
+                $teacher = Teacher::find($id);
+                $selectedTeachers[$id] = $teacher->user->realname;
+            }
         }
+
 
         return view('admin.class.edit', [
             'classes' => $classes,
