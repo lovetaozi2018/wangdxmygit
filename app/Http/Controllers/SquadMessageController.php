@@ -23,15 +23,20 @@ class SquadMessageController extends Controller
     {
         $classId = Request::get('class_id') ?  Request::get('class_id') : 1;
         $page = Request::get('page') ? Request::get('page') : 1;
-        $pageSize = 5;
+        $pageSize = Request::get('size') ? Request::get('size') : 5;
+        $count = SquadMessage::whereClassId($classId)->count();
         $start = ($page - 1) * $pageSize;
         $messages = SquadMessage::whereClassId($classId)
             ->latest()
             ->offset($start)
             ->take($pageSize)
             ->get();
-
-        return response()->json(['statusCode'=>200,'data' => $messages]);
+        if($page * $pageSize <= $count){
+            $status = true;
+        }else{
+            $status = false;
+        }
+        return response()->json(['statusCode'=>200,'data' => $messages,'status'=>$status]);
 
     }
 

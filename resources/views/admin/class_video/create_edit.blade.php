@@ -25,7 +25,7 @@
                         {{ Form::text('title', null, [
                         'class' => 'form-control',
                         'required' => 'true',
-                        'placeholder' => '(请填写用户名)',
+                        'placeholder' => '(请填写视频名称)',
                         'data-parsley-length' => '[2, 255]'
                     ]) }}
                     </div>

@@ -23,7 +23,7 @@
                 <div class="col-sm-6">
                     <div class="input-group">
                         <div class="input-group-addon">
-                            <i class="fa fa-child"></i>
+                            <i class="fa fa-user"></i>
                         </div>
                         {{ Form::text('user[realname]', null, [
                         'class' => 'form-control',
@@ -34,6 +34,27 @@
                     </div>
                 </div>
             </div>
+
+            <div class="form-group">
+                {{ Form::label('user[username]', '账号', [
+                    'class' => 'col-sm-3 control-label'
+                ]) }}
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-child"></i>
+                        </div>
+                        {{ Form::text('user[username]', null, [
+                        'class' => 'form-control',
+                        'required' => 'true',
+                        'placeholder' => '(请填写账号,只能是数字或者字母)',
+                        'data-parsley-type' => 'alphanum',
+                        'data-parsley-length' => '[2, 255]'
+                    ]) }}
+                    </div>
+                </div>
+            </div>
+
             @include('layouts.checkbox', [
             'id' => 'user[gender]',
             'label' => '性别',

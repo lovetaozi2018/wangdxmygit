@@ -121,7 +121,7 @@
                         </div>
                         {{ Form::text('remark', null, [
                         'class' => 'form-control',
-                        'placeholder' => '(请填写地址)',
+                        'placeholder' => '(请填写备注)',
                         'data-parsley-length' => '[2, 255]'
                     ]) }}
                     </div>

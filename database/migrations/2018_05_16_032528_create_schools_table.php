@@ -15,7 +15,7 @@ class CreateSchoolsTable extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique()->comment('用户名');
+            $table->string('name',128)->unique()->comment('用户名');
             $table->string('address')->comment('学校地址');
             $table->boolean('enabled');
             $table->timestamps();

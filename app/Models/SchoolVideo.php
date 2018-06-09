@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title 视频名称
  * @property int $school_id
  * @property string $path 备注
+ * @property int $hints
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -33,12 +34,21 @@ class SchoolVideo extends Model
     protected $table = 'school_videos';
 
     protected $fillable = [
-        'school_id', 'title', 'path', 'enabled'
+        'school_id', 'title', 'path', 'enabled','hints'
     ];
 
     public function school()
     {
         return $this->belongsTo('App\Models\School');
+    }
+
+    /**
+     * 返回学校视频的留言
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function schoolMessage(){
+        return $this->hasMany('App\Models\SchoolMessage','school_video_id','id');
     }
 
     public function datatable()

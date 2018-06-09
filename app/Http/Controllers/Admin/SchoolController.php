@@ -47,6 +47,7 @@ class SchoolController extends Controller
      *
      * @param SchoolRequest $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function store(SchoolRequest $request)
     {
@@ -76,6 +77,7 @@ class SchoolController extends Controller
      * @param SchoolRequest $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function update(SchoolRequest $request, $id)
     {
@@ -84,6 +86,13 @@ class SchoolController extends Controller
             response()->json(['statusCode' => 400]);
     }
 
+    /**
+     * 删除
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function delete($id) {
         return $this->school->remove($id)
             ? response()->json(['statusCode' => 200]) :

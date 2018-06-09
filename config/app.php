@@ -171,7 +171,7 @@ return [
         /*
          * Application Service Providers...
          */
-
+        Barryvdh\Cors\ServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,

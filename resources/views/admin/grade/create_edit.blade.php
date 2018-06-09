@@ -18,12 +18,17 @@
                     'class' => 'col-sm-3 control-label'
                 ]) }}
                 <div class="col-sm-6">
-                    {{ Form::text('name', null, [
-                    'class' => 'form-control',
-                    'required' => 'true',
-                    'placeholder' => '(请填写用户名)',
-                    'data-parsley-length' => '[2, 255]'
-                ]) }}
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-heart-o"></i>
+                        </div>
+                        {{ Form::text('name', null, [
+                        'class' => 'form-control',
+                        'required' => 'true',
+                        'placeholder' => '(请填写用户名)',
+                        'data-parsley-length' => '[2, 255]'
+                    ]) }}
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -31,10 +36,15 @@
                     'class' => 'col-sm-3 control-label',
                 ]) !!}
                 <div class="col-sm-6">
-                    {!! Form::select('school_id', $schools, null, [
-                        'class' => 'form-control select2',
-                        'style' => 'width: 100%;'
-                    ]) !!}
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-star-half-empty"></i>
+                        </div>
+                        {!! Form::select('school_id', $schools, null, [
+                            'class' => 'form-control select2',
+                            'style' => 'width: 100%;'
+                        ]) !!}
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -42,12 +52,16 @@
                     'class' => 'col-sm-3 control-label'
                 ]) }}
                 <div class="col-sm-6">
-                    {{ Form::text('remark', null, [
-                    'class' => 'form-control',
-                    'required' => 'true',
-                    'placeholder' => '(可填)',
-                    'data-parsley-length' => '[2, 255]'
-                ]) }}
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        {{ Form::text('remark', null, [
+                        'class' => 'form-control',
+                        'placeholder' => '(可填)',
+                        'data-parsley-length' => '[2, 255]'
+                    ]) }}
+                    </div>
                 </div>
             </div>
 

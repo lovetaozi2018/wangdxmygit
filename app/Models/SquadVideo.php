@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title 视频名称
  * @property int $class_id
  * @property string $path 备注
+ * @property int $hints 点击量
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -33,7 +34,7 @@ class SquadVideo extends Model
     protected $table = 'class_videos';
 
     protected $fillable = [
-        'class_id', 'title', 'path', 'enabled'
+        'class_id', 'title', 'path', 'enabled','hints'
     ];
 
     public function squad()
@@ -49,6 +50,10 @@ class SquadVideo extends Model
     public function school()
     {
         return $this->belongsTo('App\Models\School');
+    }
+
+    public function suqadMessage(){
+        return $this->hasMany('App\Models\SquadMessage','class_video_id','id');
     }
 
     public function datatable()

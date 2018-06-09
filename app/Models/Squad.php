@@ -135,6 +135,9 @@ class Squad extends Model
     public function modify(array $data, $id) {
 
         $class = $this->find($id);
+        if(isset($data['teacher_ids'])){
+            $data['teacher_ids'] = implode(',',$data['teacher_ids']);
+        }
         return $class->update($data) ? true : false;
     }
 

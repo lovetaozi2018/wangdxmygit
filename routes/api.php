@@ -20,8 +20,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'auth:api'], function () {
 
 });
+
 Route::post('login', 'AuthenticateController@login');
 
+# 视频
+Route::get('squadVideo/index', 'SquadVideoController@index'); //班级视频
 
 Route::get('school/index', 'SchoolController@index'); //学校轮播图和学校简介
 Route::get('teacher/index', 'TeacherController@index'); //教师录
@@ -39,3 +42,8 @@ Route::get('squad/detail', 'SquadPictureController@detail'); //班级相册详�
 #班级留言
 Route::get('squadMessage/index', 'SquadMessageController@index'); //留言详情
 Route::post('squadMessage/store', 'SquadMessageController@store'); //保存留言
+
+# 个人中心
+Route::get('users/index', 'UserController@index'); //个人中心
+Route::get('users/userInfo', 'UserController@userInfo'); //个人信息
+Route::post('users/reset', 'UserController@reset'); //密码修改

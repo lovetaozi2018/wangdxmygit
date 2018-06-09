@@ -160,9 +160,7 @@ class Student extends Model
         try {
             DB::transaction(function () use ($data) {
                 $userData = $data['user'];
-
-                $userData['username'] = 'user_'.uniqid();
-                $userData['password'] = bcrypt('12345678');
+                $userData['password'] = bcrypt('123456');
                 $userData['role_id'] = 4;
                 $userData['enabled'] = 1;
                 # 创建用户

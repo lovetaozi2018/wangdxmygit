@@ -22,9 +22,12 @@ class StudentRequest extends FormRequest
      */
     public function rules() {
         return [
-            'user.realname' => 'required|string|between:2,255|unique:users,realname,' .
-                $this->input('user_id') . ',id,' .
-                'mobile,' . $this->input('user.mobile'),
+            'user.username' => 'required|alphanum|between:2,32|unique:users,username,'
+                . $this->input('user_id') . ',id',
+//            'user.realname' => 'required|string|between:2,255|unique:users,realname,' .
+//                $this->input('user_id') . ',id,' .
+//                'mobile,' . $this->input('user.mobile'),
+            'user.realname' => 'required|string|between:2,255',
             'user.gender'        => 'required|boolean',
             'user.mobile'        =>  ['nullable', 'string', 'regex:/^0?(13|14|15|17|18)[0-9]{9}$/'],
             'user.qq'         => 'nullable|integer|unique:users,qq,' .

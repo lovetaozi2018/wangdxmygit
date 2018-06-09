@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
  *
  * @property int $id
  * @property int $student_id 学生id
+ * @property int $class_video_id 视频id
  * @property int $class_id 班级id
  * @property string $content 留言内容
  * @property int $hints 点击量
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon|null $updated_at
  * @method static Builder|SquadMessage whereId($value)
  * @method static Builder|SquadMessage whereStudentId($value)
+ * @method static Builder|SquadMessage whereClassVideoId($value)
  * @method static Builder|SquadMessage whereClassId($value)
  * @method static Builder|SquadMessage whereEnabled($value)
  * @method static Builder|SquadMessage whereCreatedAt($value)
@@ -33,7 +35,7 @@ class SquadMessage extends Model
     protected $table='class_message_board';
 
     protected $fillable=[
-        'class_id','student_id','content','enabled','hints'];
+        'class_id','class_video_id','student_id','content','enabled','hints'];
 
     /**
      * 返回留言学生的对象
@@ -44,6 +46,10 @@ class SquadMessage extends Model
 
     public function squad() { return $this->belongsTo('App\Models\Squad','class_id','id'); }
 
+    public function squadVideos()
+    {
+        return $this->belongsTo('App\Models\SquadVideo','class_video_id','id');
+    }
     /**
      * 保存留言
      *

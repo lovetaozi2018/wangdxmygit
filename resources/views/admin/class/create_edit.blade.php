@@ -20,7 +20,7 @@
                 <div class="col-sm-6">
                     <div class="input-group">
                         <div class="input-group-addon">
-                            <i class="fa fa-weixin"></i>
+                            <i class="fa fa-graduation-cap"></i>
                         </div>
                         {{ Form::text('name', null, [
                         'class' => 'form-control',
@@ -38,7 +38,7 @@
                 <div class="col-sm-6">
                     <div class="input-group">
                         <div class="input-group-addon">
-                            <i class="fa fa-object-group "></i>
+                            <i class="fa fa-star-half-empty "></i>
                         </div>
                         {!! Form::select('grade_id', $grades, null, [
                             'class' => 'form-control select2',
@@ -51,7 +51,7 @@
                    'label' => '科任老师',
                    'id' => 'teacher_ids',
                    'items' => $teachers,
-                   'icon' => 'fa fa-object-group',
+                   'icon' => 'fa fa-user',
                    'selectedItems' => $selectedTeachers ?? null
                ])
 
@@ -66,7 +66,6 @@
                         </div>
                         {{ Form::text('remark', null, [
                         'class' => 'form-control',
-                        'required' => 'true',
                         'placeholder' => '(可填)',
                         'data-parsley-length' => '[2, 255]'
                     ]) }}
