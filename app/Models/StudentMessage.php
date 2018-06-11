@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|StudentMessage whereId($value)
- * @method static Builder|StudentMessage whereStudentId($value)
- * @method static Builder|StudentMessage whereSStudentId($value)
+ * @method static Builder|StudentMessage whereUserId($value)
+ * @method static Builder|StudentMessage whereSUserId($value)
  * @method static Builder|StudentMessage whereEnabled($value)
  * @method static Builder|StudentMessage whereCreatedAt($value)
  * @method static Builder|StudentMessage whereUpdatedAt($value)

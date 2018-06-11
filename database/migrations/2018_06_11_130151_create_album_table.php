@@ -4,21 +4,19 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClassMessageBoardTable extends Migration
+class CreateAlbumTable extends Migration
 {
     /**
-     *
+     * 相册
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('class_message_board', function (Blueprint $table) {
+        Schema::create('album', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('class_video_id')->comment('视频id');
-            $table->integer('student_id')->comment('学生id');
-            $table->text('content')->comment('留言内容');
-            $table->integer('hints')->default(0)->comment('点击量');
+            $table->string('name')->comment('相册名字');
+            $table->string('remark')->nullable()->comment('备注');
             $table->boolean('enabled')->default(1);
             $table->timestamps();
         });
@@ -31,6 +29,6 @@ class CreateClassMessageBoardTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('class_message_board');
+        Schema::dropIfExists('album');
     }
 }

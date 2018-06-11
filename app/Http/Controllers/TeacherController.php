@@ -32,6 +32,9 @@ class TeacherController extends Controller
             $userIds[] = $t->user_id;
         }
         $users = User::whereEnabled(1)->whereIn('id', $userIds)->get();
+        foreach ($users as $k=>$u){
+            $users[$k]->subject = Teacher::whereUserId($u['id'])->first()->subject;
+        }
         $count  = $users->count();
         if($page * $pageSize <= $count){
             $status = true;

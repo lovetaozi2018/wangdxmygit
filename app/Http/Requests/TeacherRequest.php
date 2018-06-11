@@ -26,6 +26,7 @@ class TeacherRequest extends FormRequest
                 $this->input('user_id') . ',id,' .
                 'mobile,' . $this->input('mobile'),
             'gender' => 'required|required|boolean',
+            'subject' => 'required|required|between:2,64',
             'reamrk' => 'nullable|string',
             'mobile'   => ['required', 'string', 'regex:/^0?(13|14|15|17|18)[0-9]{9}$/'],
             // 'remark'        => 'nullable|string|between:2,255',

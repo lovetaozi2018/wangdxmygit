@@ -1,5 +1,21 @@
 Switcher.init();
 
+function preview(file) {
+    var prevDiv = document.getElementById('preview');
+    if (file.files && file.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            prevDiv.style.display = 'block';
+            prevDiv.innerHTML = '<img src="' + evt.target.result + '" style="height: 100px;margin-top: 5px;"/>';
+        };
+        reader.readAsDataURL(file.files[0]);
+    }
+    else {
+        prevDiv.innerHTML = '<div class="img" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + file.value + '\'"></div>';
+    }
+}
+
+
 $(document).ready(function() {
     $('.select2').select2();
 });
@@ -13,6 +29,11 @@ $('#save').on('click', function (e) {
     var formData = new FormData();
     var title = $('#title').val();
     var schoolId = $('#school_id').val();
+    var img = $('#fileImg')[0].files[0];
+    if (!img) {
+        img= '';
+    }
+
     var video = $('.fileVideo')[0].files[0];
 
     var enabled = $('#enabled').val();
@@ -34,6 +55,7 @@ $('#save').on('click', function (e) {
 
     formData.append("title", title);
     formData.append("school_id", schoolId);
+    formData.append("fileImg", img);
     formData.append("fileVideo", video);
     formData.append('enabled',enabled);
     formData.append("_token", $('#csrf_token').attr('content'));

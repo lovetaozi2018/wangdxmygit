@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\SchoolMessage 学校留言
@@ -43,6 +44,19 @@ class SchoolMessage extends Model
     public function schoolVideos()
     {
         return $this->belongsTo('App\Models\SchoolVideo','school_video_id','id');
+    }
+
+    /**
+     * 保存留言
+     *
+     * @param array $data
+     * @return bool
+     */
+    public function store(array $data)
+    {
+        $data['student_id'] = Student::whereUserId(Auth::id())->first()->id;
+        $res = SchoolMessage::create($data);
+        return $res ? true : false;
     }
 
 }

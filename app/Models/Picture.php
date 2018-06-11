@@ -34,7 +34,7 @@ class Picture extends Model
 
     protected $table='pictures';
 
-    protected $fillable=['name','class_id','path','enabled'];
+    protected $fillable=['album_id','class_id','path','enabled'];
 
     /**
      * 返回轮播图的学校对象
@@ -44,6 +44,13 @@ class Picture extends Model
     public function school(){ return $this->belongsTo('App\Models\School'); }
 
     public function squad(){ return $this->belongsTo('App\Models\Squad'); }
+
+    /**
+     * 返回相册对象
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function album(){ return $this->belongsTo('App\Models\Album'); }
 
     public function datatable() {
 
@@ -55,7 +62,7 @@ class Picture extends Model
                 },
             ],
             [
-                'db'        => 'Picture.name', 'dt' => 1,
+                'db'        => 'Album.name', 'dt' => 1,
                 'formatter' => function ( $d ) {
                     return $d ? '<span class="badge bg-blue">' . $d . '</span>' : '';
                 },
@@ -99,6 +106,14 @@ class Picture extends Model
                 'conditions' => [
                     'Squad.id = Picture.class_id',
                 ],
+            ],
+            [
+                'table'      => 'album',
+                'alias'      => 'Album',
+                'type'       => 'INNER',
+                'conditions' => [
+                    'Album.id = Picture.album_id',
+                ],
             ]
         ];
 
@@ -118,10 +133,13 @@ class Picture extends Model
             DB::transaction(function () use ($input) {
                 $file = $input['fileImg'];
                 $path = public_path().'/uploads/picture/';
+                $album = Album::create([
+                    'name'=>$input['name'],
+                ]);
                 foreach ($file as $v){
                     $image = User::uploadedMedias($v,$path);
                     $data = [
-                        'name'=> $input['name'],
+                        'album_id'=> $album->id,
                         'class_id'=> $input['class_id'],
                         'path'=> '/uploads/picture/'.$image['filename'],
                         'enabled'=> $input['enabled'],

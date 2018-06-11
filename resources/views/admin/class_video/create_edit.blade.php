@@ -49,6 +49,19 @@
             </div>
 
             <div class="form-group">
+                <label for="fileImg" class="col-sm-3 control-label">视频背景图</label>
+                <div class="col-sm-6">
+                    <input type="file" name="fileImg" id="fileImg" onchange="preview(this)" accept="image/gif, image/jpeg,image/png,image/jpg"/>
+                    <div id="preview">
+                        @if(isset($video) && !empty($video->image))
+                            <img src='{{asset("{$video->image}")}}' style="height: 100px;margin-top: 5px;"/>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
                 <label for="video" class="col-sm-3 control-label">视频：</label>
                 <div class="col-sm-6">
                     <input type="file" class='fileVideo' id="video" name="video">

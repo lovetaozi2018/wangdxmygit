@@ -21,12 +21,12 @@ class SquadMessageController extends Controller
      */
     public function index()
     {
-        $classId = Request::get('class_id') ?  Request::get('class_id') : 1;
+        $videoId = Request::get('video_id') ?  Request::get('video_id') : 1;
         $page = Request::get('page') ? Request::get('page') : 1;
         $pageSize = Request::get('size') ? Request::get('size') : 5;
-        $count = SquadMessage::whereClassId($classId)->count();
+        $count = SquadMessage::whereClassVideoId($videoId)->count();
         $start = ($page - 1) * $pageSize;
-        $messages = SquadMessage::whereClassId($classId)
+        $messages = SquadMessage::whereClassVideoId($videoId)
             ->latest()
             ->offset($start)
             ->take($pageSize)
@@ -40,15 +40,5 @@ class SquadMessageController extends Controller
 
     }
 
-    /**
-     * 留言
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store()
-    {
-        $message = $this->squadMessage->store(Request::all());
-        return $message ? response()->json(['statusCode' => 200]) :
-            response()->json(['statusCode' => 400]);
-    }
+
 }

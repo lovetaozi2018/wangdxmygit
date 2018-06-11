@@ -6,6 +6,7 @@ use App\Models\Squad;
 use App\Models\Student;
 use App\Models\StudentMessage;
 use App\Models\StudentPhoto;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
@@ -32,9 +33,11 @@ class SchoolMateController extends Controller
         if(sizeof($students) != 0){
             foreach ($students as $k=>$t)
             {
-                $students[$k]->realname = $t->user->realname;
+                $students[$k]->realname = User::whereId($t->user_id)->first()->realname;
+                $students[$k]->qrcode_image = User::whereId($t->user_id)->first()->qrcode_image;
             }
         }
+
         return response()->json(['statusCode' => 200,'students'=>$students ]);
 
     }
@@ -47,9 +50,25 @@ class SchoolMateController extends Controller
     public function detail()
     {
         $studentId = Request::get('student_id') ? Request::get('student_id') : 1;
-        $studentPhotos = StudentPhoto::whereStudentId($studentId)->get();
+        $user = Student::find($studentId)->user;
+        # 获取照片的创建时间
+        $date = StudentPhoto::whereStudentId($studentId)->get(['created_at']);
+        foreach ($date as $k=>$d)
+        {
+            $month[] = substr($d['created_at'],0,7);
+        }
+        $month = array_unique($month);
+        foreach ($month as $m){
+            $pictures = StudentPhoto::whereStudentId($studentId)
+                ->where('created_at', 'like', '%' . $m . '%')
+                ->get();
+            foreach ($pictures as $k=>$p){
+                $p->path = env('APP_URL').$p->path;
+            }
+            $studentPhotos[$m] = $pictures;
+        }
 
-        return response()->json(['statusCode' => 200,'data'=>$studentPhotos ]);
+        return response()->json(['statusCode' => 200,'user'=>$user,'data'=>$studentPhotos]);
 
     }
 
@@ -65,6 +84,9 @@ class SchoolMateController extends Controller
         $student->qq = $student->user->qq;
         $student->wechat = $student->user->wechat;
         $student->mobile = $student->user->mobile;
+
+        $student = $student->toArray();
+        unset($student['user']);
 
         return response()->json(['statusCode' => 200,'data'=>$student ]);
 

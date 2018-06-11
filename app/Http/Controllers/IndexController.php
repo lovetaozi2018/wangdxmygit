@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Squad;
 use App\Models\SquadVideo;
+use Illuminate\Support\Facades\Request;
 
 class IndexController extends Controller
 {
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
-        $classId =1;
+        $classId = Request::get('class_id') ? Request::get('class_id') : 1;
         $class = Squad::find($classId);
         $school = $class->grade->school;
         $video = SquadVideo::whereClassId($classId)->latest()->first();

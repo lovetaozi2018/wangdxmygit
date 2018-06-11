@@ -47,7 +47,7 @@ class AuthenticateController extends Controller
         if ($this->guard('api')->attempt($credentials, $request->has('remember'))) {
             return $this->sendLoginResponse($request);
         }
-        return $this->setStatusCode(401)->failed('登录失败,');
+        return response()->json(['status'=> 400,'code'=> 400,'message'=>'登陆失败']);
 
     }
 

@@ -3,7 +3,7 @@
         <span id="breadcrumb" style="color: #999; font-size: 13px;">班级视频/添加视频</span>
         <div class="box-tools pull-right">
             <button id="record-list" type="button" class="btn btn-box-tool">
-                <a href="{{url('squadVideos/index')}}"><i class="fa fa-mail-reply text-blue"> 返回列表</i></a>
+                <a href="{{url('schoolVideos/index')}}"><i class="fa fa-mail-reply text-blue"> 返回列表</i></a>
             </button>
         </div>
     </div>
@@ -47,7 +47,17 @@
                     </div>
                 </div>
             </div>
-
+            <div class="form-group">
+                <label for="fileImg" class="col-sm-3 control-label">视频背景图</label>
+                <div class="col-sm-6">
+                    <input type="file" name="fileImg" id="fileImg" onchange="preview(this)" accept="image/gif, image/jpeg,image/png,image/jpg"/>
+                    <div id="preview">
+                        @if(isset($schoolVideo) && !empty($schoolVideo->image && is_file(public_path().$schoolVideo->image )))
+                            <img src='{{asset("{$schoolVideo->image}")}}' style="height: 100px;margin-top: 5px;"/>
+                        @endif
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="video" class="col-sm-3 control-label">视频：</label>
                 <div class="col-sm-6">

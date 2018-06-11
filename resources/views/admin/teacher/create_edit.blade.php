@@ -57,6 +57,25 @@
                 </div>
             </div>
             <div class="form-group">
+                {{ Form::label('subject', '科目', [
+                    'class' => 'col-sm-3 control-label'
+                ]) }}
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-book"></i>
+                        </div>
+                        {{ Form::text('subject', null, [
+                         'required' => 'true',
+                        'class' => 'form-control',
+                        'placeholder' => '(请填写所教科目)',
+                        'data-parsley-length' => '[2, 255]'
+                    ]) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
                 {{ Form::label('mobile', '手机号码', [
                     'class' => 'col-sm-3 control-label'
                 ]) }}

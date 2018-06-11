@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $title 视频名称
  * @property int $class_id
+ *  * @property string |null $image 背景图
  * @property string $path 备注
  * @property int $hints 点击量
  * @property int $enabled
@@ -34,7 +35,7 @@ class SquadVideo extends Model
     protected $table = 'class_videos';
 
     protected $fillable = [
-        'class_id', 'title', 'path', 'enabled','hints'
+        'class_id', 'title','image','path', 'enabled','hints'
     ];
 
     public function squad()
@@ -52,8 +53,13 @@ class SquadVideo extends Model
         return $this->belongsTo('App\Models\School');
     }
 
-    public function suqadMessage(){
+    public function squadMessage(){
         return $this->hasMany('App\Models\SquadMessage','class_video_id','id');
+    }
+
+    public function squadHints(){
+        return $this->hasMany('App\Models\SquadHints','squad_video_id','id');
+
     }
 
     public function datatable()
@@ -120,15 +126,25 @@ class SquadVideo extends Model
     {
 
         $file = $input['fileVideo'];
+        $img = $input['fileImg'];
         $date = date('Ymd');
         $path = public_path() . '/uploads/video/' . $date . '/';
-        $image = User::uploadedMedias($file, $path);
+
+        # 图片路径
+        $imgPath = public_path() . '/uploads/image/';
+        $video = User::uploadedMedias($file, $path);
         $data = [
             'title' => $input['title'],
             'class_id' => $input['class_id'],
-            'path' => '/uploads/video/' . $date . '/' . $image['filename'],
+            'path' => '/uploads/video/' . $date . '/' . $video['filename'],
             'enabled' => $input['enabled'],
         ];
+        if($img){
+            $image = User::uploadedMedias($img, $imgPath);
+            $data['image'] = '/uploads/image/'.$image['filename'];
+        }else{
+            $data['image'] = '';
+        }
         SquadVideo::create($data);
 
         return true;
@@ -145,8 +161,20 @@ class SquadVideo extends Model
 
         $video = SquadVideo::find($id);
         $file = $data['fileVideo'];
-        # 原来的图片
-        $lastImg = public_path() . $video->path;
+        $image = $data['fileImg'];
+        $imgPath = public_path() . '/uploads/image/';
+        # 如果图片不为空
+        $lastImage='';
+        if(!empty($video->image)){
+            $lastImage = public_path().$video->image;
+        }
+
+        if ($image || sizeof($image) != 0) {
+            $images = User::uploadedMedias($image, $imgPath);
+            $data['image'] = '/uploads/image/'.$images['filename'];
+        }
+        # 原来的视频
+        $lastvideo = public_path() . $video->path;
         $date= date('Ymd');
         $path = public_path() . '/uploads/video/'.$date.'/';
         if ($file || sizeof($file) != 0) {
@@ -157,8 +185,12 @@ class SquadVideo extends Model
 
         if ($res) {
             # 删除原来的视频
-            if ($file && is_file($lastImg)) {
-                unlink($lastImg);
+            if ($file && is_file($lastvideo)) {
+                unlink($lastvideo);
+            }
+            # 删除原来的图片
+            if ($image && is_file($lastImage) && !empty($lastImage) ) {
+                unlink($lastImage);
             }
             return true;
         } else {

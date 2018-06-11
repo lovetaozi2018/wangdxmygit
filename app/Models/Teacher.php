@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
  * @property int $id
  * @property int $user_id
  * @property int $school_id
+ * @property string $subject 科目
  * @property string|null $remark 备注
  * @property int $enabled
  * @property Carbon|null $created_at
@@ -36,7 +37,7 @@ class Teacher extends Model
     protected $table='teachers';
 
     protected $fillable = [
-        'user_id','school_id','remark','status','enabled',
+        'user_id','subject','school_id','remark','status','enabled',
     ];
 
     /**
@@ -138,6 +139,7 @@ class Teacher extends Model
 
                 Teacher::create([
                     'user_id' => $user->id,
+                    'subject' => $data['subject'],
                     'school_id'=> $data['school_id'],
                     'remark' => $data['remark'],
                     'status' => $data['status'],

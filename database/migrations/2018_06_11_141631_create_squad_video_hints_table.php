@@ -4,20 +4,19 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePicturesTable extends Migration
+class CreateSquadVideoHintsTable extends Migration
 {
     /**
-     * 班级相册图片.
+     * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('pictures', function (Blueprint $table) {
+        Schema::create('squad_video_hints', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('album_id')->comment('相册id');
-            $table->integer('class_id')->comment('班级id');
-            $table->string('path')->comment('图片路径');
+            $table->integer('squad_video_id')->comment('视频id');
+            $table->integer('student_id')->unique()->comment('学生id');
             $table->boolean('enabled');
             $table->timestamps();
         });
@@ -30,6 +29,6 @@ class CreatePicturesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pictures');
+        Schema::dropIfExists('squad_video_hints');
     }
 }

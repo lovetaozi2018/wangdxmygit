@@ -16,6 +16,7 @@ class CreateTeachersTable extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->comment('用户id');
+            $table->string('subject',64)->comment('科目');
             $table->integer('school_id')->comment('所属学校id');
             $table->string('remark')->nullable()->comment('备注');
             $table->boolean('status')->default(0)->comment('是否是班主任');

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Recommend;
 use App\Models\School;
 use App\Models\Slide;

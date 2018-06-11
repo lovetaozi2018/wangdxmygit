@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property string $title 视频名称
+ * @property string |null $image 背景图
  * @property int $school_id
  * @property string $path 备注
  * @property int $hints
@@ -34,7 +35,7 @@ class SchoolVideo extends Model
     protected $table = 'school_videos';
 
     protected $fillable = [
-        'school_id', 'title', 'path', 'enabled','hints'
+        'school_id', 'title', 'image','path', 'enabled','hints'
     ];
 
     public function school()
@@ -51,6 +52,10 @@ class SchoolVideo extends Model
         return $this->hasMany('App\Models\SchoolMessage','school_video_id','id');
     }
 
+    public function schoolHints(){
+        return $this->hasMany('App\Models\SchoolHints','school_video_id','id');
+
+    }
     public function datatable()
     {
 
@@ -115,15 +120,26 @@ class SchoolVideo extends Model
     {
 
         $file = $input['fileVideo'];
+        $img = $input['fileImg'];
         $date = date('Ymd');
         $path = public_path() . '/uploads/video/' . $date . '/';
-        $image = User::uploadedMedias($file, $path);
+
+        # 图片路径
+        $imgPath = public_path() . '/uploads/image/';
+        $video = User::uploadedMedias($file, $path);
+
         $data = [
             'title' => $input['title'],
             'school_id' => $input['school_id'],
-            'path' => '/uploads/video/' . $date . '/' . $image['filename'],
+            'path' => '/uploads/video/' . $date . '/' . $video['filename'],
             'enabled' => $input['enabled'],
         ];
+        if($img){
+            $image = User::uploadedMedias($img, $imgPath);
+            $data['image'] = '/uploads/image/'.$image['filename'];
+        }else{
+            $data['image'] = '';
+        }
         SchoolVideo::create($data);
 
         return true;
@@ -137,9 +153,20 @@ class SchoolVideo extends Model
      * @return bool
      */
     public function modify(array $data, $id) {
-
+        $lastImage= '';
         $schoolVideo = SchoolVideo::find($id);
         $file = $data['fileVideo'];
+        $image = $data['fileImg'];
+        $imgPath = public_path() . '/uploads/image/';
+        # 如果图片不为空
+        if(!empty($schoolVideo->image)){
+            $lastImage = public_path().$schoolVideo->image;
+        }
+
+        if ($image || sizeof($image) != 0) {
+            $images = User::uploadedMedias($image, $imgPath);
+            $data['image'] = '/uploads/image/'.$images['filename'];
+        }
         # 原来的视频
         $lastVideo = public_path() . $schoolVideo->path;
         $date= date('Ymd');
@@ -154,6 +181,10 @@ class SchoolVideo extends Model
             # 删除原来的视频
             if ($file && is_file($lastVideo)) {
                 unlink($lastVideo);
+            }
+            # 删除原来的图片
+            if ($image && is_file($lastImage) && !empty($lastImage) ) {
+                unlink($lastImage);
             }
             return true;
         } else {

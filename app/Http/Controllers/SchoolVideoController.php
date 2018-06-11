@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\SquadHints;
-use App\Models\SquadMessage;
-use App\Models\SquadVideo;
+use App\Models\SchoolHints;
+use App\Models\SchoolMessage;
+use App\Models\SchoolVideo;
+use App\Models\Squad;
 use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
-class SquadVideoController extends Controller
+class SchoolVideoController extends Controller
 {
-
-    protected $squadMessage;
-    function __construct(SquadMessage $squadMessage)
+    protected $schoolMessage;
+    function __construct(SchoolMessage $schoolMessage)
     {
-        $this->squadMessage = $squadMessage;
+        $this->schoolMessage = $schoolMessage;
     }
 
     /**
@@ -27,12 +27,12 @@ class SquadVideoController extends Controller
     public function index()
     {
         $classId = Request::get('class_id') ?  Request::get('class_id') : 1;
+        $schoolId = Squad::find($classId)->grade->school->id;
         $page = Request::get('page') ? Request::get('page') : 1;
         $pageSize = Request::get('size') ? Request::get('size') : 2;
         $start = ($page - 1) * $pageSize;
-        $count = SquadVideo::whereClassId($classId)->count();
-        $videos = SquadVideo::whereClassId($classId)
-            ->latest()
+        $count = SchoolVideo::whereSchoolId($schoolId)->count();
+        $videos = SchoolVideo::whereSchoolId($schoolId)
             ->offset($start)
             ->take($pageSize)
             ->get();
@@ -43,10 +43,12 @@ class SquadVideoController extends Controller
                     $videos[$k]->image = env('APP_URL').$s->image;
 
                 }
-                $videos[$k]->total = SquadHints::whereSquadVideoId($s->id)->count();
+                # 统计点赞次数
+                $videos[$k]->total = SchoolHints::whereSchoolVideoId($s->id)->count();
+
             }
-            # 统计点赞次数
         }
+
         if($page * $pageSize <= $count){
             $status = true;
         }else{
@@ -62,24 +64,24 @@ class SquadVideoController extends Controller
      */
     public function detail()
     {
-        $classVideoId = Request::get('class_video_id') ? Request::get('class_video_id') : 1;
+        $schoolVideoId = Request::get('school_video_id') ? Request::get('school_video_id') : 1;
         $page = Request::get('page') ? Request::get('page') : 1;
         $pageSize = Request::get('size') ? Request::get('size') : 3;
         $start = ($page - 1) * $pageSize;
-        $video = SquadVideo::find($classVideoId);
+        $video = SchoolVideo::find($schoolVideoId);
         if(sizeof($video) != 0){
             $video->path = env('APP_URL').$video->path;
-            if(!empty($video->image)){
-                $video->image = env('APP_URL').$video->image;
+                if(!empty($video->image)){
+                    $video->image = env('APP_URL').$video->image;
 
+                }
+                # 统计点赞次数
+            $video->total = SchoolHints::whereSchoolVideoId($schoolVideoId)->count();
             }
-            # 统计点赞次数
-            $video->total = SquadHints::whereSquadVideoId($classVideoId)->count();
-        }
 
-        $count = SquadHints::whereSquadVideoId($classVideoId)->count();
+        $count = SchoolHints::whereSchoolVideoId($schoolVideoId)->count();
         $messages = [];
-        $messages = SquadMessage::whereClassVideoId($classVideoId)
+        $messages = SchoolMessage::whereSchoolVideoId($schoolVideoId)
             ->offset($start)
             ->take($pageSize)
             ->get();
@@ -107,14 +109,14 @@ class SquadVideoController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function hints(){
-        $classVideoId = Request::input('class_video_id');
+        $schoolVideoId = Request::input('school_video_id');
         $studentId = Student::whereUserId(Auth::id())->first()->id;
         $data = [
-            'squad_video_id'=>$classVideoId,
+            'school_video_id'=>$schoolVideoId,
             'student_id' => $studentId,
             'enabled' => 1
         ];
-        $res = SquadHints::create($data);
+        $res = SchoolHints::create($data);
 
         return $res ? response()->json(['statusCode'=>200,'data'=>$res]) :
             response()->json(['statusCode'=>400]);
@@ -128,7 +130,7 @@ class SquadVideoController extends Controller
      */
     public function store()
     {
-        $message = $this->squadMessage->store(Request::all());
+        $message = $this->schoolMessage->store(Request::all());
         return $message ? response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
     }
