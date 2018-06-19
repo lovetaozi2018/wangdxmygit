@@ -73,15 +73,18 @@ class Teacher extends Model
                 'db' => 'User.mobile', 'dt' => 4
             ],
             [
-                'db' => 'Teacher.status', 'dt' => 5,
+                'db' => 'User.qq', 'dt' => 5
+            ],
+            [
+                'db' => 'Teacher.status', 'dt' => 6,
                 'formatter' => function ($d) {
                     return $d == 1 ? '是' : '否';
                 }
             ],
-            ['db'        => 'Teacher.created_at', 'dt' => 6],
-            ['db'        => 'Teacher.updated_at', 'dt' => 7],
+            ['db'        => 'Teacher.created_at', 'dt' => 7],
+            ['db'        => 'Teacher.updated_at', 'dt' => 8],
             [
-                'db'        => 'Teacher.enabled', 'dt' => 8,
+                'db'        => 'Teacher.enabled', 'dt' => 9,
                 'formatter' => function ($d, $row) {
                     $status = '';
                     $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
@@ -175,6 +178,8 @@ class Teacher extends Model
                 $userData = [
                     'realname' => $data['realname'],
                     'gender' => $data['gender'],
+                    'qq' => $data['qq'],
+                    'wechat' => $data['wechat'],
                     'mobile' => $data['mobile'],
                 ];
                 User::whereId($teacher->user_id)->update($userData);

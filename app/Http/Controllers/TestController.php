@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\School;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -24,13 +25,14 @@ class TestController extends Controller
 
     public function a()
     {
+
         print_r(bcrypt('123456'));
         return view('form');
     }
 
-    public function b($id,Request $request)
+    public function b()
     {
-        $mobile = '15808393991';
-        return response()->json(['statusCode'=>200,'mobile'=>$mobile]);
+        $role = Role::find(1)->name;
+        print_r($role);
     }
 }

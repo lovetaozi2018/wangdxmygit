@@ -19,6 +19,7 @@
                 <th>学校</th>
                 <th>性别</th>
                 <th>手机</th>
+                <th>QQ</th>
                 <th>是否是班主任</th>
                 <th>创建于</th>
                 <th>更新于</th>

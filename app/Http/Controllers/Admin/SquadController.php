@@ -8,6 +8,7 @@ use App\Models\Squad;
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SquadController extends Controller
 {
@@ -155,6 +156,37 @@ class SquadController extends Controller
         return $this->squad->remove($id)
             ? response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
+    }
+
+
+    /**
+     * 生成二维码
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function makeQrcode()
+    {
+        $id = Request::input('id');
+        $class = Squad::find($id);
+        $url = 'http://ewm.baiheshequ.cn/qrcodes/class/'.$id;
+
+        # 二维码图片的路径和名称
+        $name ='uploads/qrcode/qrcode_'. str_random(5).'_'.$id.'.png';
+        QrCode::format('png')->size(250)->generate($url,public_path($name));
+        # 原来的二维码是否存在
+        $image = '/'.$name;
+        $lastImg = $class->code_image;
+
+        $res = $class->update(['code_image'=> $image]);
+        if($res){
+            if($lastImg && public_path().$lastImg){
+                unlink(public_path().$lastImg);
+            }
+            return response()->json(['statusCode' => 200]);
+        }else{
+            return response()->json(['statusCode'=> 400]);
+        }
+
     }
 
 }

@@ -5,9 +5,12 @@ namespace App\Models;
 use App\Helpers\Datatable;
 use Carbon\Carbon;
 use Eloquent;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -26,6 +29,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property string|null $qq 用户名
  * @property string|null $wechat 用户名
  * @property string|null $qrcode_image 头像URL
+ * @property string|null $ground_image 背景图
  * @property string|null $remember_token 记住我Token
  * @property int|null $school_id 学校ID
  * @property \Carbon\Carbon|null $created_at 创建于
@@ -59,7 +63,7 @@ class User extends Authenticatable
     protected $fillable = [
         'username','realname', 'role_id', 'password',
         'mobile','phone','qq', 'wechat','qrcode_image',
-        'school_id','enabled','gender'
+        'ground_image','school_id','enabled','gender'
     ];
 
     /**
@@ -72,7 +76,7 @@ class User extends Authenticatable
     ];
 
     public function findForPassport($username) {
-        return $this->where('username', $username)->orWhere('mobile',$username)->first();
+        return $this->where('username', $username)->Where('role_id',4)->first();
     }
 
     /**
@@ -104,7 +108,8 @@ class User extends Authenticatable
 
 
     public function datatable() {
-
+        $user = Auth::user();
+        $roleId = $user->role_id;
         $columns = [
             [
                 'db'        => 'User.id', 'dt' => 0,
@@ -127,24 +132,61 @@ class User extends Authenticatable
             ],
             ['db'        => 'User.mobile', 'dt' => 4],
             [
-                'db'        => 'User.role_id', 'dt' => 5
+                'db'        => 'User.role_id', 'dt' => 5,
+                'formatter' => function ($d) {
+                    return $d ? '<span class="badge bg-red">' . User::whereRoleId($d)->first()->role->name . '</span>' : '';
+                }
             ],
-            ['db'        => 'User.created_at', 'dt' => 6],
-            ['db'        => 'User.updated_at', 'dt' => 7],
             [
-                'db'        => 'User.enabled', 'dt' => 8,
+                'db'        => 'User.school_id', 'dt' => 6,
+                'formatter' => function ($d) {
+                    return $d ? School::find($d)->name : '';
+                }
+            ],
+            ['db'        => 'User.created_at', 'dt' => 7],
+            ['db'        => 'User.updated_at', 'dt' => 8],
+            [
+                'db'        => 'User.enabled', 'dt' => 9,
                 'formatter' => function ($d, $row) {
                     $status = '';
-                    $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
-                    $status .= '&nbsp;<a id=' . $row['id'] . ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal"><i class="fa fa-trash"></i></a>';
+                    if (Auth::user()->role_id == 1) {
+                        $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
+
+                        if ($row['id'] == Auth::id()) {
+                            $status .='';
+                        }else{
+                            $status .= '&nbsp;<a id=' . $row['id'] . ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal"><i class="fa fa-trash"></i></a>';
+
+                        }
+                    }
+
+                    # 如果是学校管理员
+                    if (Auth::user()->role_id == 2) {
+
+                        if ($row['id'] == Auth::id()) {
+                            $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
+                            $status .= '&nbsp;<a id=' . $row['id'] . ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal"><i class="fa fa-trash"></i></a>';
+
+                        }else{
+                            $status .= '&nbsp;<a id=' . $row['id'] . ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal"><i class="fa fa-trash"></i></a>';
+
+                        }
+                    }
+
+
                     return $status;
                 },
             ],
 
         ];
 
-
-        return $this->simple($this, $columns);
+        $condition = null;
+        if($roleId == 1){
+            $condition = 'User.role_id < 3';
+        }else{
+            $condition = 'User.id ='.Auth::id();
+        }
+        return $this->simple($this, $columns,null,$condition);
     }
 
     /**
@@ -183,5 +225,74 @@ class User extends Authenticatable
 
         }
         return false;
+    }
+
+    /**
+     * 更新学生个人信息
+     *
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    public static function modify(array $data)
+    {
+//        $userId = Auth::id();
+        $userId = 5;
+        try {
+            DB::transaction(function () use ($data,$userId) {
+                $userData =[
+                    'gender' => $data['gender'],
+                    'qq' => $data['qq'],
+                    'wechat' => $data['wechat'],
+                    'mobile' => $data['mobile'],
+                    'phone' => $data['phone'],
+                ];
+                User::whereId($userId)->update($userData);
+                $studentData = [
+                    'star' => $data['star'],
+                    'address' => $data['address'],
+                    'hobby' => $data['hobby'],
+                    'specialty' => $data['specialty']
+                ];
+                Student::whereUserId($userId)->update($studentData);
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * 上传个人相册
+     *
+     * @param $file
+     * @return bool
+     * @throws Exception
+     */
+    public static function uploadMyPicture($file)
+    {
+        $userId = Auth::id();
+        try {
+            DB::transaction(function () use ($file,$userId) {
+                $studentId = Student::whereUserId($userId)->first()->id;
+                $path = public_path().'/uploads/mypicture/'.$studentId.'/';
+                foreach ($file as $v){
+                    $image = User::uploadedMedias($v,$path);
+                    $data = [
+                        'student_id'=> $studentId,
+                        'path'=> '/uploads/mypicture/'.$studentId.'/'.$image['filename'],
+                        'enabled'=> 1,
+                    ];
+                    StudentPhoto::create($data);
+                }
+
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return true;
     }
 }

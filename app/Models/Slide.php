@@ -66,9 +66,11 @@ class Slide extends Model
                 'db'        => 'Slide.path', 'dt' => 2,
                 'formatter' => function ($d) {
                     if ($d) {
-                        $url = $_SERVER["REDIRECT_URL"];
-                        $temp = explode('/',$url);
-                        $d = '/'.$temp[1].'/'.$temp[2].$d;
+//                        $url = $_SERVER["REDIRECT_URL"];
+//                        $temp = explode('/',$url);
+//                        $d = '/'.$temp[1].'/'.$temp[2].$d;
+                        $url = env('APP_URL');
+                        $d = $url.$d;
                     }
                     return $d ? '<img src="' . $d . '" style="height: 100px;"/>' : '';
                 },

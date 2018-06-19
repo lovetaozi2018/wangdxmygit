@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 
 /**
- * App\Models\Teacher 教师
+ * App\Models\Student 学生
  *
  * @property int $id
  * @property int $user_id
@@ -25,17 +25,17 @@ use Illuminate\Support\Facades\DB;
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder|Teacher whereId($value)
- * @method static Builder|Teacher whereUserId($value)
- * @method static Builder|Teacher whereClassId($value)
- * @method static Builder|Teacher whereDuty($value)
- * @method static Builder|Teacher whereStar($value)
- * @method static Builder|Teacher whereAddress($value)
- * @method static Builder|Teacher whereHobby($value)
- * @method static Builder|Teacher whereSpecialty($value)
- * @method static Builder|Teacher whereEnabled($value)
- * @method static Builder|Teacher whereCreatedAt($value)
- * @method static Builder|Teacher whereUpdatedAt($value)
+ * @method static Builder|Student whereId($value)
+ * @method static Builder|Student whereUserId($value)
+ * @method static Builder|Student whereClassId($value)
+ * @method static Builder|Student whereDuty($value)
+ * @method static Builder|Student whereStar($value)
+ * @method static Builder|Student whereAddress($value)
+ * @method static Builder|Student whereHobby($value)
+ * @method static Builder|Student whereSpecialty($value)
+ * @method static Builder|Student whereEnabled($value)
+ * @method static Builder|Student whereCreatedAt($value)
+ * @method static Builder|Student whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Student extends Model
@@ -71,6 +71,8 @@ class Student extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function studentPhotos(){ return $this->hasMany('App\Models\StudentPhoto'); }
+
+    public function message(){ return $this->hasMany('App\Models\Message');}
 
 
     public function datatable() {

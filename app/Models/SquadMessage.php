@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 
 /**
- * App\Models\SquadMessage 班级留言
+ * App\Models\SquadMessage 班级视频留言
  *
  * @property int $id
  * @property int $student_id 学生id

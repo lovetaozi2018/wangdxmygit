@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $teacher_ids 班级名称
  * @property int $grade_id
  * @property string|null $remark 备注
+ * @property string|null $code_image 二维码
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -35,7 +36,7 @@ class Squad extends Model
     protected $table='classes';
 
     protected $fillable=[
-        'name','grade_id','teacher_ids','remark','enabled',
+        'name','grade_id','teacher_ids','remark','code_image','enabled',
     ];
 
     public function grade(){ return $this->belongsTo('App\Models\Grade'); }
@@ -45,6 +46,8 @@ class Squad extends Model
     public function students(){ return $this->hasMany('App\Models\Student','class_id','id'); }
 
     public function squadVideos(){ return $this->hasMany('App\Models\SquadVideo'); }
+
+    public function message(){ return $this->hasMany('App\Models\Message');}
 
     /**
      * 返回班级的留言
@@ -81,14 +84,32 @@ class Squad extends Model
                     return School::find($d)->name ? School::find($d)->name : '';
                 }
             ],
-            ['db'        => 'Squad.created_at', 'dt' => 4],
-            ['db'        => 'Squad.updated_at', 'dt' => 5],
             [
-                'db'        => 'Squad.enabled', 'dt' => 6,
+                'db'        => 'Squad.code_image', 'dt' => 4,
+                'formatter' => function ($d) {
+                    if ($d) {
+                        $url = env('APP_URL');
+                        $d = $url.$d;
+                    }
+                    return $d ? '<img src="' . $d . '" style="height: 120px;"/>' : '';
+                },
+
+            ],
+            ['db'        => 'Squad.created_at', 'dt' => 5],
+            ['db'        => 'Squad.updated_at', 'dt' => 6],
+            [
+                'db'        => 'Squad.enabled', 'dt' => 7,
                 'formatter' => function ($d, $row) {
                     $status = '';
-                    $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
-                    $status .= '&nbsp;<a id=' . $row['id'] . ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal"><i class="fa fa-trash"></i></a>';
+                    $status .= '&nbsp;<a id=' . $row['id'] .
+                        ' href="javascript:void(0)" class="btn btn-primary btn-icon btn-circle btn-xs" data-toggle="modal">
+                        <i class="fa fa-qrcode" style="height: 16px;line-height: 16px;"></i></a>';
+                        $status .= '&nbsp;<a id=' . $row['id'] .
+                        ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs">
+                        <i class="fa fa-edit" style="height: 16px;line-height: 16px;"></i></a>';
+                        $status .= '&nbsp;<a id=' . $row['id'] .
+                        ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal">
+                        <i class="fa fa-trash" style="height: 16px;line-height: 16px;"></i></a>';
                     return $status;
                 },
             ],

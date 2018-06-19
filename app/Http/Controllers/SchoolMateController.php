@@ -33,8 +33,13 @@ class SchoolMateController extends Controller
         if(sizeof($students) != 0){
             foreach ($students as $k=>$t)
             {
-                $students[$k]->realname = User::whereId($t->user_id)->first()->realname;
-                $students[$k]->qrcode_image = User::whereId($t->user_id)->first()->qrcode_image;
+                $user = User::whereId($t->user_id)->first();
+                $students[$k]->realname = $user->realname;
+                if($user->qrcode_image){
+                    $students[$k]->qrcode_image = env('APP_URL').$user->qrcode_image;
+                }else{
+                    $students[$k]->qrcode_image = $user->qrcode_image;
+                }
             }
         }
 
@@ -51,6 +56,15 @@ class SchoolMateController extends Controller
     {
         $studentId = Request::get('student_id') ? Request::get('student_id') : 1;
         $user = Student::find($studentId)->user;
+
+        if($user->qrcode_image){
+            $user->qrcode_image = env('APP_URL').$user->qrcode_image;
+        }
+
+        if($user->ground_image){
+            $user->ground_image = env('APP_URL').$user->ground_image;
+        }
+
         # 获取照片的创建时间
         $date = StudentPhoto::whereStudentId($studentId)->get(['created_at']);
         foreach ($date as $k=>$d)
@@ -71,6 +85,49 @@ class SchoolMateController extends Controller
         return response()->json(['statusCode' => 200,'user'=>$user,'data'=>$studentPhotos]);
 
     }
+
+    /**
+     * 上一张和下一张图片
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function preNext()
+    {
+        $id = Request::get('id');
+        $picture = StudentPhoto::whereId($id)->first();
+        $picture->path = env('APP_URL').$picture->path;
+        $studentId = $picture->student_id;
+        # 年月
+        $month = substr($picture['created_at'],0,7);
+        $pre = $next = [];
+        # 上一个id
+        $pre = StudentPhoto::whereStudentId($studentId)
+            ->where('id','<',$id)
+            ->where('created_at', 'like', '%' . $month . '%')
+            ->first();
+        if($pre){
+            $pre->path = env('APP_URL').$pre->path;
+        }
+
+        # 下一张图片
+        $next = StudentPhoto::whereStudentId($studentId)
+            ->where('id','>',$id)
+            ->where('created_at', 'like', '%' . $month . '%')
+            ->first();
+        if($next){
+            $next->path = env('APP_URL').$next->path;
+        }
+
+        return response()->json([
+            'statusCode'=> 200,
+            'data'=>$picture,
+            'pre' => $pre,
+            'next' => $next
+        ]);
+
+    }
+
+
 
     /**
      * 学生个人信息

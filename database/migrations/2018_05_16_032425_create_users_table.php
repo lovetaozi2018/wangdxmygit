@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('qq')->nullable()->comment('qq');
             $table->string('wechat')->nullable()->comment('微信账号');
             $table->string('qrcode_image')->nullable()->comment('头像URL');
+            $table->string('ground_image')->nullable()->comment('背景图');
             $table->integer('school_id')->nullable()->comment('学校id');
             $table->boolean('enabled');
             $table->timestamps();
