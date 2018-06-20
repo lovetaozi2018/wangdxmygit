@@ -2,7 +2,7 @@
 @section('content')
 <div class="box box-default box-solid">
     <div class="box-header with-border">
-        <span id="breadcrumb" style="color: #999; font-size: 13px;">班级管理/班级列表</span>
+        <span id="breadcrumb" style="color: #999; font-size: 13px;">学生管理/学生列表</span>
         <div class="box-tools pull-right">
             <button id="add-record" type="button" class="btn btn-box-tool">
                 <a href="{{url('students/create')}}"><i class="fa fa-plus text-blue"> 新增</i></a>
@@ -16,6 +16,7 @@
             <tr class="bg-info">
                 <th>#</th>
                 <th>姓名</th>
+                <th>学校</th>
                 <th>班级</th>
                 <th>QQ</th>
                 <th>电话</th>

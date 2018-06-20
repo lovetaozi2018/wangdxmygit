@@ -85,13 +85,14 @@
                     <img src="{{ asset('image/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <a href="#"><i class="fa fa-circle text-success"></i></a>
+                    <p>{{ Auth::user()->realname }}</p>
+                    <a href="#"><i class="fa fa-circle text-success"></i>{{ Auth::user()->role->name }}</a>
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li id="index">
-                    <a href="#"><i class="fa fa-comments"></i> <span>主页</span></a>
-                </li>
+                {{--<li id="index">--}}
+                    {{--<a href="#"><i class="fa fa-comments"></i> <span>主页</span></a>--}}
+                {{--</li>--}}
                 <li id="grades">
                     <a href="{{url('grades/index')}}"><i class="fa fa-group"></i> <span>年级管理</span></a>
                 </li>
@@ -129,6 +130,9 @@
                     <a href="{{url('users/index')}}"><i class="fa fa-plus fa-dashboard"></i> <span>系统设置</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li class="active"><a href="{{ url('users/index') }}"><i class="fa fa-circle-o"></i>管理员</a></li>
+                    </ul>
                     <ul class="treeview-menu">
                         <li class="active"><a href="{{ url('users/reset') }}"><i class="fa fa-circle-o"></i> 修改密码</a></li>
                     </ul>

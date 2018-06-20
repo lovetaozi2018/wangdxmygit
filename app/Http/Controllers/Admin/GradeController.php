@@ -6,6 +6,7 @@ use App\Http\Requests\GradeRequest;
 use App\Models\Grade;
 use App\Http\Controllers\Controller;
 use App\Models\School;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class GradeController extends Controller
@@ -44,9 +45,19 @@ class GradeController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+        }else{
+            $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
+        }
         return view('admin.grade.create', [
             'js' => '../js/admin/grade/create.js',
-            'schools' => School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'schools' => $schools,
         ]);
     }
 
@@ -67,11 +78,21 @@ class GradeController extends Controller
     }
 
     public function edit($id) {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+        }else{
+            $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
+        }
 
         $grade = $this->grade->find($id);
         return view('admin.grade.edit', [
             'grade' => $grade,
-            'schools' => School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'schools' => $schools,
             'js'    => '../../js/admin/grade/edit.js',
         ]);
 

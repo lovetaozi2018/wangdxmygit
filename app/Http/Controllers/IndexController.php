@@ -21,6 +21,10 @@ class IndexController extends Controller
             $video->path = env('APP_URL').$video->path;
         }
 
+        if($video->image){
+            $video->image = env('APP_URL').$video->image;
+        }
+
         return response()->json([
             'stausCode'=>200,
             'class'=>$class,

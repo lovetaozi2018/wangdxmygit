@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\Grade 学校
@@ -93,7 +94,14 @@ class Grade extends Model
 
         ];
 
-        return $this->simple($this, $columns);
+        $condition = null;
+        $roleId = Auth::user()->role_id;
+        $schoolId = Auth::user()->school_id;
+        if($roleId == 2){
+            $condition = 'Grade.school_id='.$schoolId;
+        }
+
+        return $this->simple($this, $columns,null,$condition);
     }
 
     /**

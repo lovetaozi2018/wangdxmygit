@@ -37,10 +37,12 @@ Route::any('password/reset',function(){
 Route::get('logout', 'Auth\LoginController@logout');
 Route::get('test', 'TestController@index');
 Route::get('a', 'TestController@a');
-Route::get('b/{id}', 'TestController@b');
+Route::get('b', 'TestController@b');
 
 //Route::get('users/index', 'admin\UserController@index');
 Route::group(['namespace' => 'Admin'], function () {
+
+    Route::get('qrcodes/class/{id}', 'QrcodeController@index');
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('users/index', 'UserController@index');
@@ -83,7 +85,9 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::post('classes/store', 'SquadController@store');
         Route::get('classes/edit/{id}', 'SquadController@edit');
         Route::put('classes/update/{id}', 'SquadController@update');
+        Route::post('classes/makeCode', 'SquadController@makeQrcode');
         Route::delete('classes/delete/{id}', 'SquadController@delete');
+
 
         # 班级相册管理
         Route::get('pictures/index', 'PictureController@index');
@@ -117,7 +121,6 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::delete('students/delete/{id}', 'StudentController@delete');
     });
 
-    Route::get('qrcodes/class/{id}', 'QrcodeController@index');
 });
 //Route::namespace('admin')->group(function () {
 //    Route::get('users/index', 'UserController@index');
@@ -126,6 +129,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');

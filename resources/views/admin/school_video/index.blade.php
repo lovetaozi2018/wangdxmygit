@@ -17,7 +17,8 @@
                 <th>#</th>
                 <th>学校</th>
                 <th>视频名称</th>
-                <th>图片</th>
+                <th>视频</th>
+                <th>背景图</th>
                 <th>创建于</th>
                 <th>更新于</th>
                 <th>状态</th>
@@ -28,10 +29,19 @@
     </div>
 </div>
 @endsection
-{{--<style>--}}
-    {{--tbody td{--}}
-        {{--height: 110px;--}}
-        {{--line-height: 110px!important;--}}
-        {{--vertical-align: middle!important;--}}
-    {{--}--}}
-{{--</style>--}}
+<style>
+    tbody td{
+        height: 110px;
+        line-height: 110px!important;
+        vertical-align: middle!important;
+    }
+</style>
+<script>
+    function changeVideoState(_this) {
+        if(_this.paused){
+            _this.play();
+        }else{
+            _this.pause();
+        }
+    }
+</script>

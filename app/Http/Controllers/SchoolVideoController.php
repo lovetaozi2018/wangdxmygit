@@ -111,6 +111,14 @@ class SchoolVideoController extends Controller
     public function hints(){
         $schoolVideoId = Request::input('school_video_id');
         $studentId = Student::whereUserId(Auth::id())->first()->id;
+
+        #查询是否已经点赞
+        $hints = SchoolHints::whereSchoolVideoId($schoolVideoId)
+            ->where('student_id',$studentId)
+            ->first();
+        if($hints){
+            return response()->json(['statusCode'=>201]);
+        }
         $data = [
             'school_video_id'=>$schoolVideoId,
             'student_id' => $studentId,

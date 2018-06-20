@@ -8,8 +8,8 @@ function initDatatable() {
         stateSave: true,
         autoWidth: true,
         columnDefs: [
-            { className: 'text-center', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
-            { className: 'text-right', targets: [10] }
+            { className: 'text-center', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+            { className: 'text-right', targets: [11] }
         ],
         scrollX: true,
         language: {url: '../files/ch.json'},

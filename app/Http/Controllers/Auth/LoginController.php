@@ -44,15 +44,15 @@ class LoginController extends Controller
         $password = $request->input('password');
         $rememberMe = $request->input('rememberMe') == 'true' ? true : false;
         if (User::whereUsername($input)->first()) {
-            $user = User::whereUsername($input)->first();
+            $user = User::whereUsername($input)->where('role_id','<','3')->first();
             $field = 'username';
         } else {
-            $mobile = User::whereMobile($input)->first();
+            $mobile = User::whereMobile($input)->where('role_id','<','3')->first();
             if (!$mobile) {
                 return response()->json(['statusCode' => 500]);
             }
-            $username = User::whereMobile($input)->first()->username;
-            $user = User::whereUsername($username)->first();
+            $username = User::whereMobile($input)->where('role_id','<','3')->first()->username;
+            $user = User::whereUsername($username)->where('role_id','<','3')->first();
             if (
             Auth::attempt(
                 ['username' => $username, 'password' => $password],

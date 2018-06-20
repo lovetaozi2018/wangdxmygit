@@ -7,6 +7,7 @@ use App\Http\Requests\TeacherRequest;
 use App\Models\School;
 use App\Models\Teacher;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class TeacherController extends Controller
@@ -26,6 +27,7 @@ class TeacherController extends Controller
      */
     public function index()
     {
+
         if (Request::get('draw')) {
             return response()->json($this->teacher->datatable());
 
@@ -42,9 +44,20 @@ class TeacherController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+        }else{
+            $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
+        }
+
         return view('admin.teacher.create', [
             'js' => '../js/admin/teacher/create.js',
-            'schools' => School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'schools' => $schools,
         ]);
     }
 
@@ -72,13 +85,26 @@ class TeacherController extends Controller
      */
     public function edit($id) {
 
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+        }else{
+            $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
+        }
+
         $teacher = $this->teacher->find($id);
         $teacher->realname = $teacher->user->realname;
         $teacher->mobile = $teacher->user->mobile;
+        $teacher->qq = $teacher->user->qq;
+        $teacher->wechat = $teacher->user->wechat;
         $teacher->remark = $teacher->user->remark;
         return view('admin.teacher.edit', [
             'teacher' => $teacher,
-            'schools' => School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'schools' => $schools,
             'js'    => '../../js/admin/teacher/edit.js',
         ]);
 

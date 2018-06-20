@@ -20,8 +20,9 @@
                 <th>性别</th>
                 <th>手机号码</th>
                 <th>角色</th>
-                <th>创建时间</th>
-                <th>更新时间</th>
+                <th>所属学校</th>
+                <th>创建于</th>
+                <th>更新于</th>
                 <th>状态</th>
             </tr>
             </thead>

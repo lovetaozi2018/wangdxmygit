@@ -7,9 +7,10 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
- * App\Models\Video 班级相册
+ * App\Models\SquadVideo 班级视频
  *
  * @property int $id
  * @property string $title 视频名称
@@ -85,8 +86,17 @@ class SquadVideo extends Model
                 }
             ],
             [
-                'db' => 'SquadVideo.path', 'dt' => 3
-
+                'db' => 'SquadVideo.path', 'dt' => 3,
+                'formatter' => function ($d, $row) {
+                    $video = SquadVideo::whereId($row['id'])->first();
+                    if ($video->image) {
+                        $image = env('APP_URL') .$video->image;
+                    }else{
+                        $image = env('APP_URL').'/image/002008151116108868.jpg';
+                    }
+                    $d = env('APP_URL') . $d;
+                    return $d ? '<video src="' . $d . '" style="height: 100px;" poster="' . $image . '" onclick="changeVideoState(this)"></video>' : '';
+                }
             ],
             ['db' => 'SquadVideo.created_at', 'dt' => 4],
             ['db' => 'SquadVideo.updated_at', 'dt' => 5],
@@ -110,10 +120,24 @@ class SquadVideo extends Model
                 'conditions' => [
                     'Squad.id = SquadVideo.class_id',
                 ],
+            ],
+            [
+                'table'      => 'grades',
+                'alias'      => 'Grade',
+                'type'       => 'INNER',
+                'conditions' => [
+                    'Grade.id = Squad.grade_id',
+                ],
             ]
         ];
 
-        return $this->simple($this, $columns, $joins);
+        $condition = null;
+        $roleId = Auth::user()->role_id;
+        $schoolId = Auth::user()->school_id;
+        if($roleId == 2){
+            $condition = 'Grade.school_id='.$schoolId;
+        }
+        return $this->simple($this, $columns,$joins,$condition);
     }
 
     /**

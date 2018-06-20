@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Picture;
+use App\Models\School;
 use App\Models\Squad;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class PictureController extends Controller
@@ -43,7 +45,29 @@ class PictureController extends Controller
      */
     public function create()
     {
-        $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $school = School::find($schoolId);
+            $grades = $school->grades;
+            $classIds=[];
+            foreach ($grades as $k=>$g)
+            {
+                if($g->squads){
+                    foreach ($g->squads as $s){
+                        $classIds[] = $s->id;
+                    }
+                }
+            }
+            $classes = Squad::whereEnabled(1)->whereIn('id',$classIds)->get()->pluck('name', 'id');
+
+        }else{
+            $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        }
+
         foreach ($classes as $k=>$c){
             $classes[$k] = $c.'--'.Squad::find($k)->grade->school->name;
         }
@@ -74,9 +98,29 @@ class PictureController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id) {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+         # 如果是学校管理员
+        if ($roleId == 2) {
+            $schoolId = $user->school_id;
+            $school = School::find($schoolId);
+            $grades = $school->grades;
+            $classIds = [];
+            foreach ($grades as $k => $g) {
+                if ($g->squads) {
+                    foreach ($g->squads as $s) {
+                        $classIds[] = $s->id;
+                    }
+                }
+            }
+            $classes = Squad::whereEnabled(1)->whereIn('id', $classIds)->get()->pluck('name', 'id');
+
+        } else {
+            $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        }
 
         $picture = $this->picture->find($id);
-        $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+
         foreach ($classes as $k=>$c){
             $classes[$k] = $c.'--'.Squad::find($k)->grade->school->name;
         }

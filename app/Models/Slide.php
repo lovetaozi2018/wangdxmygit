@@ -8,6 +8,7 @@ use Eloquent;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -66,9 +67,11 @@ class Slide extends Model
                 'db'        => 'Slide.path', 'dt' => 2,
                 'formatter' => function ($d) {
                     if ($d) {
-                        $url = $_SERVER["REDIRECT_URL"];
-                        $temp = explode('/',$url);
-                        $d = '/'.$temp[1].'/'.$temp[2].$d;
+//                        $url = $_SERVER["REDIRECT_URL"];
+//                        $temp = explode('/',$url);
+//                        $d = '/'.$temp[1].'/'.$temp[2].$d;
+                        $url = env('APP_URL');
+                        $d = $url.$d;
                     }
                     return $d ? '<img src="' . $d . '" style="height: 100px;"/>' : '';
                 },
@@ -87,7 +90,13 @@ class Slide extends Model
 
         ];
 
-        return $this->simple($this, $columns);
+        $condition = null;
+        $roleId = Auth::user()->role_id;
+        $schoolId = Auth::user()->school_id;
+        if($roleId == 2){
+            $condition = 'Slide.school_id='.$schoolId;
+        }
+        return $this->simple($this, $columns,null,$condition);
     }
 
     /**

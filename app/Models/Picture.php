@@ -8,20 +8,21 @@ use Eloquent;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Picture 班级相册
  *
  * @property int $id
- * @property string $name 相册名称
+ * @property string $album_id 相册id
  * @property int $class_id
  * @property string $path 备注
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @method static Builder|Picture whereId($value)
- * @method static Builder|Picture whereName($value)
+ * @method static Builder|Picture whereAlbumId($value)
  * @method static Builder|Picture whereClassId($value)
  * @method static Builder|Picture whereEnabled($value)
  * @method static Builder|Picture whereCreatedAt($value)
@@ -77,9 +78,11 @@ class Picture extends Model
                 'db'        => 'Picture.path', 'dt' => 3,
                 'formatter' => function ($d) {
                     if ($d) {
-                        $url = $_SERVER["REDIRECT_URL"];
-                        $temp = explode('/',$url);
-                        $d = '/'.$temp[1].'/'.$temp[2].$d;
+//                        $url = $_SERVER["REDIRECT_URL"];
+//                        $temp = explode('/',$url);
+//                        $d = '/'.$temp[1].'/'.$temp[2].$d;
+                        $url = env('APP_URL');
+                        $d = $url.$d;
                     }
                     return $d ? '<img src="' . $d . '" style="height: 100px;"/>' : '';
                 },
@@ -114,10 +117,25 @@ class Picture extends Model
                 'conditions' => [
                     'Album.id = Picture.album_id',
                 ],
+            ],
+            [
+                'table'      => 'grades',
+                'alias'      => 'Grade',
+                'type'       => 'INNER',
+                'conditions' => [
+                    'Grade.id = Squad.grade_id',
+                ],
             ]
         ];
 
-        return $this->simple($this, $columns,$joins);
+        $condition = null;
+        $roleId = Auth::user()->role_id;
+        $schoolId = Auth::user()->school_id;
+        if($roleId == 2){
+            $condition = 'Grade.school_id='.$schoolId;
+        }
+        return $this->simple($this, $columns,$joins,$condition);
+
     }
 
     /**

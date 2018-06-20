@@ -109,7 +109,7 @@ function progressHandlingFunction(e) {
 //                 if (result.statusCode === 200) {
 //                     $.gritter.add({title: '操作结果', text: '更新成功', image:'../../image/confirm.png'});
 //                 } else {
-//                     $.gritter.add({title: '操作结果', text: '更新失败', image:'../../image/failure.png'});
+//                     $.gritter.add({title: '操作结果', text: '更新失败', image:'../../image/failure.jpg'});
 //                 }
 //             },
 //             error: function (e) {

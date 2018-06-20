@@ -8,11 +8,12 @@ use Eloquent;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
 /**
- * App\Models\Teacher 教师
+ * App\Models\Student 学生
  *
  * @property int $id
  * @property int $user_id
@@ -25,17 +26,17 @@ use Illuminate\Support\Facades\DB;
  * @property int $enabled
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @method static Builder|Teacher whereId($value)
- * @method static Builder|Teacher whereUserId($value)
- * @method static Builder|Teacher whereClassId($value)
- * @method static Builder|Teacher whereDuty($value)
- * @method static Builder|Teacher whereStar($value)
- * @method static Builder|Teacher whereAddress($value)
- * @method static Builder|Teacher whereHobby($value)
- * @method static Builder|Teacher whereSpecialty($value)
- * @method static Builder|Teacher whereEnabled($value)
- * @method static Builder|Teacher whereCreatedAt($value)
- * @method static Builder|Teacher whereUpdatedAt($value)
+ * @method static Builder|Student whereId($value)
+ * @method static Builder|Student whereUserId($value)
+ * @method static Builder|Student whereClassId($value)
+ * @method static Builder|Student whereDuty($value)
+ * @method static Builder|Student whereStar($value)
+ * @method static Builder|Student whereAddress($value)
+ * @method static Builder|Student whereHobby($value)
+ * @method static Builder|Student whereSpecialty($value)
+ * @method static Builder|Student whereEnabled($value)
+ * @method static Builder|Student whereCreatedAt($value)
+ * @method static Builder|Student whereUpdatedAt($value)
  * @mixin Eloquent
  */
 class Student extends Model
@@ -72,6 +73,8 @@ class Student extends Model
      */
     public function studentPhotos(){ return $this->hasMany('App\Models\StudentPhoto'); }
 
+    public function message(){ return $this->hasMany('App\Models\Message');}
+
 
     public function datatable() {
 
@@ -88,16 +91,23 @@ class Student extends Model
                     return $d ? '<span class="badge bg-blue">' . $d . '</span>' : '';
                 },
             ],
-            ['db'        => 'Squad.name', 'dt' => 2],
-            ['db'        => 'User.qq', 'dt' => 3],
-            ['db'        => 'User.mobile', 'dt' => 4],
-            ['db' => 'Student.duty', 'dt' => 5],
-            ['db' => 'Student.star', 'dt' => 6],
-            ['db' => 'Student.address', 'dt' => 7],
-            ['db'        => 'Student.created_at', 'dt' => 8],
-            ['db'        => 'Student.updated_at', 'dt' => 9],
             [
-                'db'        => 'Student.enabled', 'dt' => 10,
+                'db'        => 'Student.class_id ', 'dt' => 2,
+                'formatter' => function ( $d ) {
+                    $d = Student::whereClassId($d)->first()->squad->grade->school->name;
+                    return $d ? $d : '';
+                },
+            ],
+            ['db'        => 'Squad.name', 'dt' => 3],
+            ['db'        => 'User.qq', 'dt' => 4],
+            ['db'        => 'User.mobile', 'dt' => 5],
+            ['db' => 'Student.duty', 'dt' => 6],
+            ['db' => 'Student.star', 'dt' => 7],
+            ['db' => 'Student.address', 'dt' => 8],
+            ['db'        => 'Student.created_at', 'dt' => 9],
+            ['db'        => 'Student.updated_at', 'dt' => 10],
+            [
+                'db'        => 'Student.enabled', 'dt' => 11,
                 'formatter' => function ($d, $row) {
                     $status = '';
                     $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
@@ -124,26 +134,31 @@ class Student extends Model
                 'conditions' => [
                     'Squad.id = Student.class_id',
                 ],
-            ]
+            ],
+            [
+                'table'      => 'grades',
+                'alias'      => 'Grade',
+                'type'       => 'INNER',
+                'conditions' => [
+                    'Grade.id = Squad.grade_id',
+                ],
+            ],
 //            [
-//                'table'      => 'Grade',
-//                'alias'      => 'Squad',
+//                'table'      => 'schools',
+//                'alias'      => 'School',
 //                'type'       => 'INNER',
 //                'conditions' => [
-//                    'Squad.id = student.class_id',
+//                    'School.id = Grade.school_id',
 //                ],
-//            ],
-//            [
-//                'table'      => 'classes',
-//                'alias'      => 'Squad',
-//                'type'       => 'INNER',
-//                'conditions' => [
-//                    'Squad.id = student.class_id',
-//                ],
-//            ],
+//            ]
         ];
-
-        return $this->simple($this, $columns,$joins);
+        $condition = null;
+        $roleId = Auth::user()->role_id;
+        $schoolId = Auth::user()->school_id;
+        if($roleId == 2){
+            $condition = 'Grade.school_id='.$schoolId;
+        }
+        return $this->simple($this, $columns,$joins,$condition);
     }
 
 

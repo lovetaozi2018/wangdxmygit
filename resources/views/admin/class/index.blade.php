@@ -18,8 +18,9 @@
                 <th>名称</th>
                 <th>年级</th>
                 <th>所属学校</th>
-                <th>创建时间</th>
-                <th>更新时间</th>
+                <th>二维码</th>
+                <th>创建于</th>
+                <th>更新于</th>
                 <th>状态</th>
             </tr>
             </thead>
@@ -28,3 +29,10 @@
     </div>
 </div>
 @endsection
+<style>
+    tbody td{
+        height: 130px;
+        line-height: 130px!important;
+        vertical-align: middle!important;
+    }
+</style>

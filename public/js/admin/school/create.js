@@ -19,8 +19,10 @@ $form.parsley().on('form:validated', function () {
             success: function (result) {
                 if (result.statusCode === 200) {
                     $.gritter.add({title: '操作结果', text: '添加成功', image:'../image/confirm.png'});
-                } else {
-                    $.gritter.add({title: '操作结果', text: '添加失败', image:'../image/failure.png'});
+                } else if(result.statusCode === 201) {
+                    $.gritter.add({title: '操作结果', text: '该号码已经存在', image:'../image/failure.jpg'});
+                }else{
+                    $.gritter.add({title: '操作结果', text: '添加失败', image:'../image/failure.jpg'});
                 }
             }
         });

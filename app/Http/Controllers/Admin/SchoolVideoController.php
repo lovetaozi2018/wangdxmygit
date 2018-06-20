@@ -7,6 +7,7 @@ use App\Models\SchoolVideo;
 use App\Models\Squad;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class SchoolVideoController extends Controller
@@ -43,8 +44,18 @@ class SchoolVideoController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+        }else{
+            $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
+        }
         return view('admin.school_video.create', [
-            'schools' =>  School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'schools' =>  $schools,
             'js' => '../js/admin/school_video/create.js',
         ]);
     }
@@ -71,11 +82,20 @@ class SchoolVideoController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id) {
+        $user = Auth::user();
+        $roleId = $user->role_id;
 
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+        }else{
+            $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
+        }
         $schoolVideo = $this->schoolVideo->find($id);
         return view('admin.school_video.edit', [
             'schoolVideo' =>  $schoolVideo,
-            'schools' =>  School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'schools' =>  $schools,
             'js'    => '../../js/admin/school_video/edit.js',
         ]);
 

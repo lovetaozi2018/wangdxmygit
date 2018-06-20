@@ -19,6 +19,7 @@ class CreateClassesTable extends Migration
             $table->integer('grade_id')->comment('年级id');
             $table->string('teacher_ids')->nullable()->comment('教师id');
             $table->string('remark')->nullable()->comment('备注');
+            $table->string('code_image')->nullable()->comment('二维码');
             $table->boolean('enabled');
             $table->timestamps();
         });

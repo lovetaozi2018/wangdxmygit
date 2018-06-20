@@ -4,9 +4,11 @@
     <div class="box-header with-border">
         <span id="breadcrumb" style="color: #999; font-size: 13px;">学校/学校列表</span>
         <div class="box-tools pull-right">
+            @if( Auth::user()->role_id == 1)
             <button id="add-record" type="button" class="btn btn-box-tool">
                 <a href="{{url('schools/create')}}"><i class="fa fa-plus text-blue"> 新增</i></a>
             </button>
+            @endif
         </div>
     </div>
     <div class="box-body">

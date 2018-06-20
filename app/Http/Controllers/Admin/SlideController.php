@@ -7,6 +7,7 @@ use App\Models\Recommend;
 use App\Models\School;
 use App\Models\Slide;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class SlideController extends Controller
@@ -43,9 +44,20 @@ class SlideController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+        }else{
+            $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
+        }
+
         return view('admin.slide.create', [
             'js' => '../js/admin/slide/create.js',
-            'schools' => School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'schools' => $schools,
         ]);
     }
 
@@ -65,11 +77,21 @@ class SlideController extends Controller
     }
 
     public function edit($id) {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+        }else{
+            $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
+        }
 
         $slide = $this->slide->find($id);
         return view('admin.slide.edit', [
             'slide' => $slide,
-            'schools' => School::whereEnabled(1)->get()->pluck('name', 'id'),
+            'schools' => $schools,
             'js' => '../../js/admin/slide/edit.js',
         ]);
 

@@ -108,7 +108,16 @@ class SquadVideoController extends Controller
      */
     public function hints(){
         $classVideoId = Request::input('class_video_id');
-        $studentId = Student::whereUserId(Auth::id())->first()->id;
+        $userId = Auth::id();
+        $studentId = Student::whereUserId($userId)->first()->id;
+
+        #查询是否已经点赞
+        $hints = SquadHints::whereSquadVideoId($classVideoId)
+            ->where('student_id',$studentId)
+            ->first();
+        if($hints){
+            return response()->json(['statusCode'=>201]);
+        }
         $data = [
             'squad_video_id'=>$classVideoId,
             'student_id' => $studentId,

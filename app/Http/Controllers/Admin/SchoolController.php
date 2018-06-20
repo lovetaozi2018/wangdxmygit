@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolRequest;
 use App\Models\School;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class SchoolController extends Controller
@@ -36,9 +37,19 @@ class SchoolController extends Controller
 
     public function create()
     {
-        return view('admin.school.create', [
-            'js' => '../js/admin/school/create.js',
-        ]);
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            return '你没有权限访问该页面';
+        }else{
+            return view('admin.school.create', [
+                'js' => '../js/admin/school/create.js',
+            ]);
+        }
+
+
     }
 
 
@@ -51,6 +62,11 @@ class SchoolController extends Controller
      */
     public function store(SchoolRequest $request)
     {
+        $mobile = $request->all()['mobile'];
+        $user = User::whereMobile($mobile)->first();
+        if($user){
+            return response()->json(['statusCode' => 201]);
+        }
         return $this->school->store($request->all()) ?
             response()->json(['statusCode' => 200]):
             response()->json(['statusCode' => 400]);

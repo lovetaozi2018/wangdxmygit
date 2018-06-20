@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\SchoolVideo 学校视频
@@ -79,13 +80,31 @@ class SchoolVideo extends Model
                 }
             ],
             [
-                'db' => 'SchoolVideo.path', 'dt' => 3
+                'db' => 'SchoolVideo.path', 'dt' => 3,
+                'formatter' => function ($d, $row) {
+                    $image = SchoolVideo::whereId($row['id'])->first()->image;
+                    if ($image) {
+                        $image = env('APP_URL') . $image;
+                    }
+                    $d = env('APP_URL') . $d;
+                    return $d ? '<video src="' . $d . '" style="height: 100px;" poster="' . $image . '" onclick="changeVideoState(this)"></video>' : '';
+                }
+            ],
+            [
+                'db' => 'SchoolVideo.image', 'dt' => 4,
+                'formatter' => function ($d) {
+                    if ($d) {
+                        $d = env('APP_URL') . $d;
+
+                    }
+                    return $d ? '<img src="' . $d . '" style="height: 100px;"/>' : '';
+                }
 
             ],
-            ['db' => 'SchoolVideo.created_at', 'dt' => 4],
-            ['db' => 'SchoolVideo.updated_at', 'dt' => 5],
+            ['db' => 'SchoolVideo.created_at', 'dt' => 5],
+            ['db' => 'SchoolVideo.updated_at', 'dt' => 6],
             [
-                'db' => 'SchoolVideo.enabled', 'dt' => 6,
+                'db' => 'SchoolVideo.enabled', 'dt' => 7,
                 'formatter' => function ($d, $row) {
                     $status = '';
                     $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
@@ -107,7 +126,13 @@ class SchoolVideo extends Model
             ]
         ];
 
-        return $this->simple($this, $columns, $joins);
+        $condition = null;
+        $roleId = Auth::user()->role_id;
+        $schoolId = Auth::user()->school_id;
+        if($roleId == 2){
+            $condition = 'SchoolVideo.school_id='.$schoolId;
+        }
+        return $this->simple($this, $columns,$joins,$condition);
     }
 
     /**

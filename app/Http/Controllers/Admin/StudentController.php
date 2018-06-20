@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StudentRequest;
+use App\Models\School;
 use App\Models\Squad;
 use App\Models\Student;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class StudentController extends Controller
@@ -40,7 +42,28 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $school = School::find($schoolId);
+            $grades = $school->grades;
+            $classIds=[];
+            foreach ($grades as $k=>$g)
+            {
+                if($g->squads){
+                    foreach ($g->squads as $s){
+                        $classIds[] = $s->id;
+                    }
+                }
+            }
+            $classes = Squad::whereEnabled(1)->whereIn('id',$classIds)->get()->pluck('name', 'id');
+
+        }else{
+            $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        }
 
         foreach ($classes as $k=>$g){
             $classes[$k] = $g.'——'.Squad::whereId($k)->first()->grade->school->name;
@@ -76,7 +99,28 @@ class StudentController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id) {
-        $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $school = School::find($schoolId);
+            $grades = $school->grades;
+            $classIds=[];
+            foreach ($grades as $k=>$g)
+            {
+                if($g->squads){
+                    foreach ($g->squads as $s){
+                        $classIds[] = $s->id;
+                    }
+                }
+            }
+            $classes = Squad::whereEnabled(1)->whereIn('id',$classIds)->get()->pluck('name', 'id');
+
+        }else{
+            $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        }
 
         foreach ($classes as $k=>$g){
             $classes[$k] = $g.'——'.Squad::whereId($k)->first()->grade->school->name;
@@ -100,6 +144,7 @@ class StudentController extends Controller
      * @param StudentRequest $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function update(StudentRequest $request, $id)
     {

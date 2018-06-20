@@ -61,7 +61,7 @@
             <div class="form-group">
                 <label for="video" class="col-sm-3 control-label">视频：</label>
                 <div class="col-sm-6">
-                    <input type="file" class='fileVideo' id="video" name="video">
+                    <input type="file" class='fileVideo' id="video" name="video" accept="video/mp4,video/mpeg,video/mpeg4-generic">
                     <div style="margin-top: 20px;display: none" id="progressBox">
                         上传进度：
                         <progress></progress>

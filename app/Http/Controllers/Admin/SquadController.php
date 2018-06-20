@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\SquadRequest;
 use App\Models\Grade;
+use App\Models\School;
 use App\Models\Squad;
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SquadController extends Controller
 {
@@ -45,7 +48,26 @@ class SquadController extends Controller
      */
     public function create()
     {
-        $data = Teacher::with('user')
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $school = School::find($schoolId);
+            $grades = $school->grades;
+            $gradeIds=[];
+            foreach ($grades as $k=>$g)
+            {
+                $gradeIds[]=$g->id;
+            }
+            $grades = Grade::whereEnabled(1)->whereIn('id',$gradeIds)->get()->pluck('name', 'id');
+
+        }else{
+            $grades = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        }
+
+        $data = Teacher::whereSchoolId($schoolId)->with('user')
             ->get()->toArray();
         $teachers = [];
         if (!empty($data)) {
@@ -54,7 +76,6 @@ class SquadController extends Controller
             }
         }
 
-        $grades = Grade::whereEnabled(1)->get()->pluck('name', 'id');
 
         foreach ($grades as $k=>$g){
             $grades[$k] = $g.'——'.Grade::whereId($k)->first()->school->name;
@@ -90,9 +111,32 @@ class SquadController extends Controller
      */
     public function edit($id) {
 
+        $user = Auth::user();
+        $roleId = $user->role_id;
+
+        # 如果是学校管理员
+        if($roleId == 2){
+            $schoolId = $user->school_id;
+            $school = School::find($schoolId);
+            $grades = $school->grades;
+            $gradeIds=[];
+            foreach ($grades as $k=>$g)
+            {
+                $gradeIds[]=$g->id;
+            }
+            $grades = Grade::whereEnabled(1)->whereIn('id',$gradeIds)->get()->pluck('name', 'id');
+
+        }else{
+            $grades = Squad::whereEnabled(1)->get()->pluck('name', 'id');
+        }
+
+        foreach ($grades as $k=>$g){
+            $grades[$k] = $g.'——'.Grade::whereId($k)->first()->school->name;
+        }
+
         $selectedTeachers = [];
         # 获取老师
-        $data = Teacher::with('user')
+        $data = Teacher::whereSchoolId($schoolId)->with('user')
             ->get()->toArray();
         $teachers = [];
         if (!empty($data)) {
@@ -102,12 +146,6 @@ class SquadController extends Controller
         }
 
 
-        # 获取年级
-        $grades = Grade::whereEnabled(1)->get()->pluck('name', 'id');
-
-        foreach ($grades as $k=>$g){
-            $grades[$k] = $g.'——'.Grade::whereId($k)->first()->school->name;
-        }
         # 班级
         $classes = $this->squad->find($id);
         if($classes->teacher_ids){
@@ -155,6 +193,37 @@ class SquadController extends Controller
         return $this->squad->remove($id)
             ? response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
+    }
+
+
+    /**
+     * 生成二维码
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function makeQrcode()
+    {
+        $id = Request::input('id');
+        $class = Squad::find($id);
+        $url = 'http://ewm.baiheshequ.cn/qrcodes/class/'.$id;
+
+        # 二维码图片的路径和名称
+        $name ='uploads/qrcode/qrcode_'. str_random(5).'_'.$id.'.png';
+        QrCode::format('png')->size(250)->generate($url,public_path($name));
+        # 原来的二维码是否存在
+        $image = '/'.$name;
+        $lastImg = $class->code_image;
+
+        $res = $class->update(['code_image'=> $image]);
+        if($res){
+            if($lastImg && public_path().$lastImg){
+                unlink(public_path().$lastImg);
+            }
+            return response()->json(['statusCode' => 200]);
+        }else{
+            return response()->json(['statusCode'=> 400]);
+        }
+
     }
 
 }
