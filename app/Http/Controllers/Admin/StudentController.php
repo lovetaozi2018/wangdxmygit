@@ -165,4 +165,31 @@ class StudentController extends Controller
             ? response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
     }
+
+    /**
+     * 导入学籍
+     * @throws \PHPExcel_Exception
+     */
+    public function import() {
+
+        if (Request::isMethod('post')) {
+            $file = Request::file('file');
+            if (empty($file)) {
+                $result = [
+                    'statusCode' => 500,
+                    'message'    => '您还没选择文件！',
+                ];
+                return response()->json($result);
+            }
+            // 文件是否上传成功
+            if ($file->isValid()) {
+
+                $result = Student::upload($file);
+                return response()->json($result);
+            }
+        }
+
+        return null;
+
+    }
 }

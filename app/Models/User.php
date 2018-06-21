@@ -194,7 +194,7 @@ class User extends Authenticatable
      * @param $filePath
      * @return array|bool
      */
-    public static function uploadedMedias($file, $filePath) {
+    public static function uploadedMedias(UploadedFile $file, $filePath) {
 
         if ($file->isValid()) {
             // 获取文件相关信息

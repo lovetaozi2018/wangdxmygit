@@ -40,3 +40,38 @@ $(document).on('click', '.fa-trash', function () {
         })
     }
 });
+
+var $import = $('#import');
+var $importPupils = $('#import-pupils');
+var $file = $('#confirm-import');
+$import.on('click', function () {
+    $importPupils.modal({backdrop: true});
+    $file.off('click');
+    $file.on('click', function () {
+        var formData = new FormData();
+
+        formData.append('file', $('#fileupload')[0].files[0]);
+
+        formData.append('_token', $('#csrf_token').attr('content'));
+        $.ajax({
+            url: "../students/import",
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                console.log(result);
+                if (result.statusCode === 200) {
+                    $.gritter.add({title: '操作结果', text: '删除成功', image:'../image/confirm.png'});
+                } else {
+                    $.gritter.add({title: '操作结果', text: '删除失败', image:'../image/failure.jpg'});
+                }
+            },
+            // error: function (result) {
+            //     console.log(result);
+            //     $.gritter.add({title: '操作结果', text: '删除失败', image:'../image/error.png'});
+            //
+            // }
+        });
+    })
+});

@@ -119,6 +119,7 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('students/edit/{id}', 'StudentController@edit');
         Route::put('students/update/{id}', 'StudentController@update');
         Route::delete('students/delete/{id}', 'StudentController@delete');
+        Route::post('students/import', 'StudentController@import');
     });
 
 });
