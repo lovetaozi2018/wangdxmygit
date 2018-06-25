@@ -16,6 +16,7 @@ class CreateAlbumTable extends Migration
         Schema::create('album', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->comment('相册名字');
+            $table->integer('class_id')->comment('班级id');
             $table->string('remark')->nullable()->comment('备注');
             $table->boolean('enabled')->default(1);
             $table->timestamps();

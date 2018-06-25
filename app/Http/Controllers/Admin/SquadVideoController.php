@@ -67,9 +67,11 @@ class SquadVideoController extends Controller
         }else{
             $classes = Squad::whereEnabled(1)->get()->pluck('name', 'id');
         }
-
         foreach ($classes as $k=>$c){
-            $classes[$k] = $c.'--'.Squad::find($k)->grade->school->name;
+            $class =  Squad::find($k);
+            if($class->grade){
+                $classes[$k] = $c.'--'.$class->grade->school->name;
+            }
         }
         return view('admin.class_video.create', [
             'classes' =>  $classes,

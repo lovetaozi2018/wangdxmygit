@@ -6,6 +6,7 @@ use App\Http\Requests\GradeRequest;
 use App\Models\Grade;
 use App\Http\Controllers\Controller;
 use App\Models\School;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
@@ -120,9 +121,19 @@ class GradeController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete($id) {
-        return $this->grade->remove($id)
-            ? response()->json(['statusCode' => 200]) :
-            response()->json(['statusCode' => 400]);
+        $gradeIds = User::getGradeId();
+        if(in_array($id,$gradeIds)){
+            $grade = Grade::find($id);
+            if(sizeof($grade->squads)!=0){
+                return response()->json(['statusCode' => 201]);
+            }
+            return $this->grade->remove($id)
+                ? response()->json(['statusCode' => 200]) :
+                response()->json(['statusCode' => 400]);
+        }else{
+            return response()->json(['statusCode' => 404]);
+        }
+
     }
 
 

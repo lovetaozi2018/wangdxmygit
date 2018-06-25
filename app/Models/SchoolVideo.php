@@ -82,9 +82,11 @@ class SchoolVideo extends Model
             [
                 'db' => 'SchoolVideo.path', 'dt' => 3,
                 'formatter' => function ($d, $row) {
-                    $image = SchoolVideo::whereId($row['id'])->first()->image;
-                    if ($image) {
-                        $image = env('APP_URL') . $image;
+                    $video = SchoolVideo::whereId($row['id'])->first();
+                    if ($video->image) {
+                        $image = env('APP_URL') .$video->image;
+                    }else{
+                        $image = env('APP_URL').'/image/002008151116108868.jpg';
                     }
                     $d = env('APP_URL') . $d;
                     return $d ? '<video src="' . $d . '" style="height: 100px;" poster="' . $image . '" onclick="changeVideoState(this)"></video>' : '';

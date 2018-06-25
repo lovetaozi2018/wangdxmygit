@@ -168,7 +168,8 @@ class StudentController extends Controller
 
     /**
      * 导入学籍
-     * @throws \PHPExcel_Exception
+     * @return \Illuminate\Http\JsonResponse|null
+     * @throws \Exception
      */
     public function import() {
 
@@ -183,7 +184,6 @@ class StudentController extends Controller
             }
             // 文件是否上传成功
             if ($file->isValid()) {
-
                 $result = Student::upload($file);
                 return response()->json($result);
             }

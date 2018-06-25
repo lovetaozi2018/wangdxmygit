@@ -33,8 +33,12 @@ $(document).on('click', '.fa-trash', function () {
                     table.fnDestroy();
                     initDatatable();
 
+                }else if(result.statusCode === 201){
+                    $.gritter.add({title: '操作结果', text: '该年级下面还有班级,删除失败', image:'../image/failure.jpg'});
+                }else if(result.statusCode === 404){
+                    $.gritter.add({title: '操作结果', text: '你没有权限进行此操作', image:'../image/error.png'});
                 }else{
-                    $.gritter.add({title: '操作结果', text: '删除失败', image:'../image/error.png'});
+                    $.gritter.add({title: '操作结果', text: '删除失败', image:'../image/failure.jpg'});
                 }
             }
         })

@@ -21,7 +21,7 @@ class SquadMessageController extends Controller
      */
     public function index()
     {
-        $videoId = Request::get('video_id') ?  Request::get('video_id') : 1;
+        $videoId = Request::get('video_id');
         $page = Request::get('page') ? Request::get('page') : 1;
         $pageSize = Request::get('size') ? Request::get('size') : 5;
         $count = SquadMessage::whereClassVideoId($videoId)->count();

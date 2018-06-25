@@ -17,7 +17,7 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $classId = Request::get('class_id') ? Request::get('class_id') : 1;
+        $classId = Request::get('class_id');
         $page = Request::get('page') ? Request::get('page') : 1;
         $pageSize = Request::get('size') ? Request::get('size') : 5;
         $start = ($page - 1) * $pageSize;

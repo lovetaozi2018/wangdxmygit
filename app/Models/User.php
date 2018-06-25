@@ -295,4 +295,89 @@ class User extends Authenticatable
 
         return true;
     }
+
+    /**
+     * 获取登陆用户的所有学校id
+     *
+     * @return array
+     */
+    public static function getSchoolId(){
+        $user = Auth::user();
+        $roleId = $user->role_id;
+        $schoolIds = [];
+        if($roleId==2)
+        {
+            $schoolIds[] = $user->school_id;
+        }else{
+            $schools = School::all();
+            foreach ($schools as $s){
+                $schoolIds[]= $s->id;
+            }
+        }
+        return $schoolIds;
+    }
+
+    /**
+     * 获取登陆管理员下面的年级id
+     *
+     * @return array
+     */
+    public static function getGradeId()
+    {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+        $gradeIds=[];
+        if($roleId==2)
+        {
+            $schoolId = $user->school_id;
+            $school = School::find($schoolId);
+            $grades = $school->grades;
+
+            foreach ($grades as $k=>$g)
+            {
+                $gradeIds[] = $g->id;
+            }
+        }else{
+            $grades = Grade::all();
+            foreach ($grades as $g){
+                $gradeIds[] = $g->id;
+            }
+        }
+
+        return $gradeIds;
+    }
+
+    /**
+     * 获取登陆用户下面的所有班级id
+     *
+     * @return array
+     */
+    public static function getClassId()
+    {
+        $user = Auth::user();
+        $roleId = $user->role_id;
+        $classIds=[];
+        if($roleId==2)
+        {
+            $schoolId = $user->school_id;
+            $school = School::find($schoolId);
+            $grades = $school->grades;
+
+            foreach ($grades as $k=>$g)
+            {
+                if($g->squads){
+                    foreach ($g->squads as $s){
+                        $classIds[] = $s->id;
+                    }
+                }
+            }
+        }else{
+            $classes = Squad::all();
+            foreach ($classes as $c){
+                $classIds[] = $c->id;
+            }
+        }
+
+        return $classIds;
+    }
 }

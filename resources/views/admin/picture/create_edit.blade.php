@@ -1,6 +1,6 @@
 <div class="box box-widget">
     <div class="box-header with-border">
-        <span id="breadcrumb" style="color: #999; font-size: 13px;">年级管理/创建年级</span>
+        <span id="breadcrumb" style="color: #999; font-size: 13px;">相册管理/创建相册</span>
         <div class="box-tools pull-right">
             <button id="record-list" type="button" class="btn btn-box-tool">
                 <a href="{{url('pictures/index')}}"><i class="fa fa-mail-reply text-blue"> 返回列表</i></a>
@@ -25,7 +25,7 @@
                         {{ Form::text('name', null, [
                         'class' => 'form-control',
                         'required' => 'true',
-                        'placeholder' => '(请填写用户名)',
+                        'placeholder' => '(请填写相册名称)',
                         'data-parsley-length' => '[2, 255]'
                     ]) }}
                     </div>

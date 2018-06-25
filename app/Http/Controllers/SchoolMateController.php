@@ -26,7 +26,7 @@ class SchoolMateController extends Controller
      */
     public function index()
     {
-        $classId = Request::get('class_id') ? Request::get('class_id') : 1;
+        $classId = Request::get('class_id');
         $class = Squad::whereId($classId)->first();
         $students = [];
         $students = $class->students;
@@ -54,7 +54,7 @@ class SchoolMateController extends Controller
      */
     public function detail()
     {
-        $studentId = Request::get('student_id') ? Request::get('student_id') : 1;
+        $studentId = Request::get('student_id');
         $user = Student::find($studentId)->user;
 
         if($user->qrcode_image){
@@ -136,7 +136,7 @@ class SchoolMateController extends Controller
      */
     public function userInfo()
     {
-        $studentId = Request::get('student_id') ? Request::get('student_id') : 1;
+        $studentId = Request::get('student_id');
         $student = Student::find($studentId);
         $student->qq = $student->user->qq;
         $student->wechat = $student->user->wechat;

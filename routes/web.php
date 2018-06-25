@@ -94,6 +94,7 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('pictures/create', 'PictureController@create');
         Route::post('pictures/store', 'PictureController@store');
         Route::get('pictures/edit/{id}', 'PictureController@edit');
+        Route::get('pictures/detail/{id}', 'PictureController@detail');
         Route::post('pictures/update/{id}', 'PictureController@update');
         Route::delete('pictures/delete/{id}', 'PictureController@delete');
         # 班级视频
@@ -111,6 +112,8 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('teachers/edit/{id}', 'TeacherController@edit');
         Route::put('teachers/update/{id}', 'TeacherController@update');
         Route::delete('teachers/delete/{id}', 'TeacherController@delete');
+        Route::post('teachers/import', 'TeacherController@import');
+
 
         # 学生管理
         Route::get('students/index', 'StudentController@index');

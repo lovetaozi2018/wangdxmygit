@@ -17,7 +17,7 @@ class SquadPictureController extends Controller
      */
     public function index()
     {
-        $classId = Request::get('class_id') ? Request::get('class_id') : 1;
+        $classId = Request::get('class_id');
         # 获取相册id
         $albumId =  Picture::whereClassId($classId)
             ->get(['album_id']);
@@ -51,7 +51,7 @@ class SquadPictureController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function detail(){
-        $classId = Request::get('class_id') ? Request::get('class_id') : 1;
+        $classId = Request::get('class_id');
         $albumId = Request::get('album_id');
         # 获取相册的年月
         $date = Picture::whereAlbumId($albumId)

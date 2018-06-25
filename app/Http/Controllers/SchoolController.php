@@ -17,7 +17,7 @@ class SchoolController extends Controller
     public function index()
     {
         $slide = [];
-        $schoolId = Request::get('school_id') ? Request::get('school_id') : 1 ;
+        $schoolId = Request::get('school_id');
         $slide = Slide::whereSchoolId($schoolId)->get();
         if(sizeof($slide) != 0){
             foreach ($slide as $k=>$s){

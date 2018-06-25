@@ -57,7 +57,7 @@ class Picture extends Model
 
         $columns = [
             [
-                'db'        => 'Picture.id', 'dt' => 0,
+                'db'        => 'Album.id', 'dt' => 0,
                 'formatter' => function ( $d ) {
                     return $d ? $d : '';
                 },
@@ -69,28 +69,22 @@ class Picture extends Model
                 },
             ],
             [
-                'db'        => 'Squad.name as classname', 'dt' => 2,
+                'db'        => 'Album.remark', 'dt' => 2,
                 'formatter' => function($d){
                     return $d;
                 }
             ],
             [
-                'db'        => 'Picture.path', 'dt' => 3,
+                'db'        => 'Album.class_id', 'dt' => 3,
                 'formatter' => function ($d) {
-                    if ($d) {
-//                        $url = $_SERVER["REDIRECT_URL"];
-//                        $temp = explode('/',$url);
-//                        $d = '/'.$temp[1].'/'.$temp[2].$d;
-                        $url = env('APP_URL');
-                        $d = $url.$d;
-                    }
-                    return $d ? '<img src="' . $d . '" style="height: 100px;"/>' : '';
+
+                    return Grade::find($d)->school->name;
                 },
             ],
-            ['db'        => 'Picture.created_at', 'dt' => 4],
-            ['db'        => 'Picture.updated_at', 'dt' => 5],
+            ['db'        => 'Album.created_at', 'dt' => 4],
+            ['db'        => 'Album.updated_at', 'dt' => 5],
             [
-                'db'        => 'Picture.enabled', 'dt' => 6,
+                'db'        => 'Album.enabled', 'dt' => 6,
                 'formatter' => function ($d, $row) {
                     $status = '';
                     $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
@@ -101,32 +95,25 @@ class Picture extends Model
 
         ];
 
-        $joins = [
-            [
-                'table'      => 'classes',
-                'alias'      => 'Squad',
-                'type'       => 'INNER',
-                'conditions' => [
-                    'Squad.id = Picture.class_id',
-                ],
-            ],
-            [
-                'table'      => 'album',
-                'alias'      => 'Album',
-                'type'       => 'INNER',
-                'conditions' => [
-                    'Album.id = Picture.album_id',
-                ],
-            ],
-            [
-                'table'      => 'grades',
-                'alias'      => 'Grade',
-                'type'       => 'INNER',
-                'conditions' => [
-                    'Grade.id = Squad.grade_id',
-                ],
-            ]
-        ];
+//        $joins = [
+//            [
+//                'table'      => 'classes',
+//                'alias'      => 'Squad',
+//                'type'       => 'INNER',
+//                'conditions' => [
+//                    'Squad.id = Album.class_id',
+//                ],
+//            ],
+//
+//            [
+//                'table'      => 'grades',
+//                'alias'      => 'Grade',
+//                'type'       => 'INNER',
+//                'conditions' => [
+//                    'Grade.id = Squad.grade_id',
+//                ],
+//            ]
+//        ];
 
         $condition = null;
         $roleId = Auth::user()->role_id;
@@ -134,7 +121,7 @@ class Picture extends Model
         if($roleId == 2){
             $condition = 'Grade.school_id='.$schoolId;
         }
-        return $this->simple($this, $columns,$joins,$condition);
+        return $this->simple($this, $columns,null,$condition);
 
     }
 
@@ -153,6 +140,7 @@ class Picture extends Model
                 $path = public_path().'/uploads/picture/';
                 $album = Album::create([
                     'name'=>$input['name'],
+                    'class_id'=> $input['class_id'],
                 ]);
                 foreach ($file as $v){
                     $image = User::uploadedMedias($v,$path);

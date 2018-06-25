@@ -23,7 +23,7 @@ initDatatable();
 // });
 
 $(document).on('click', '.fa-trash', function () {
-    var result = confirm("是否确认删除该条新闻?");
+    var result = confirm("是否确认删除该学校?");
     var id = $(this).parents().eq(0).attr('id');
     if(result){
         $.ajax({
@@ -37,8 +37,14 @@ $(document).on('click', '.fa-trash', function () {
                     table.fnDestroy();
                     initDatatable();
 
+                }else if(result.statusCode === 201){
+                    $.gritter.add({title: '操作结果', text: '该学校下面还有年级,不能删除', image:'../image/failure.jpg'});
+                }else if(result.statusCode === 202){
+                    $.gritter.add({title: '操作结果', text: '该学校还有视频,不能删除', image:'../image/failure.jpg'});
+                }else if(result.statusCode === 404){
+                    $.gritter.add({title: '操作结果', text: '你没有权限进行此操作', image:'../image/error.png'});
                 }else{
-                    $.gritter.add({title: '操作结果', text: '删除失败', image:'../../image/confirm.png'});
+                    $.gritter.add({title: '操作结果', text: '删除失败', image:'../image/failure.jpg'});
                 }
             }
         })

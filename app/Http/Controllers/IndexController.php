@@ -13,16 +13,17 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $classId = Request::get('class_id') ? Request::get('class_id') : 1;
+        $classId = Request::get('class_id');
         $class = Squad::find($classId);
         $school = $class->grade->school;
+        unset($class['grade']);
         $video = SquadVideo::whereClassId($classId)->latest()->first();
         if($video){
             $video->path = env('APP_URL').$video->path;
-        }
+            if($video->image){
+                $video->image = env('APP_URL').$video->image;
+            }
 
-        if($video->image){
-            $video->image = env('APP_URL').$video->image;
         }
 
         return response()->json([

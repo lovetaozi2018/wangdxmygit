@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\School;
+use App\Models\User;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -32,7 +33,8 @@ class TestController extends Controller
 
     public function b()
     {
-        $role = Role::find(1)->name;
-        print_r($role);
+        $student = User::whereUsername('李婷婷')
+            ->first();
+        dump($student);
     }
 }

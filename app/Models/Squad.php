@@ -171,6 +171,7 @@ class Squad extends Model
 
     public function remove($id)
     {
-        return Squad::whereId($id)->delete() ? true : false;
+        $squad = Squad::find($id);
+        return $squad->delete() ? true : false;
     }
 }

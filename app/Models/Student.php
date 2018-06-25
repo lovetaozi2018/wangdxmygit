@@ -13,10 +13,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Readers\LaravelExcelReader;
-use PHPExcel_Exception;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use PHPExcel_Exception;
 
 /**
  * App\Models\Student 学生
@@ -50,10 +49,10 @@ class Student extends Model
     use Datatable;
 
     const EXCEL_FILE_TITLE = [
-        '姓名', '性别', '生日', '学校',
-        '年级', '班级', '手机号码',
-        '学号', '卡号', '住校',
-        '备注', '监护关系',
+        '姓名', '账号', '性别', '学校',
+         '年级', '班级','QQ','微信',
+        '手机号码', '职务','星座', '地址',
+        '爱好', '特长',
     ];
     const EXCEL_EXPORT_TITLE = [
         '姓名', '性别', '班级', '学号',
@@ -262,30 +261,16 @@ class Student extends Model
      *
      * @param UploadedFile $file
      * @return array
-     * @throws PHPExcel_Exception
+     * @throws Exception
      */
     static function upload(UploadedFile $file) {
         $path = public_path().'/uploads/files/';
         $file = User::uploadedMedias($file,$path);
         if ($file) {
             $filePath = public_path().'/uploads/files/'.$file['filename'];
-            Excel::load($filePath, function($reader) {
-//                $data = $reader->all();
-                $reader = $reader->getSheet(0);
-
-                //获取表中的数据
-                $students = $reader->toArray();
-                echo '<pre>';
-                print_r($students);exit;
-            });
-            exit;
-            /** @var LaravelExcelReader $reader */
             $reader = Excel::load($filePath);
-
             $sheet = $reader->getExcel()->getSheet(0);
-            $students = $sheet->toArray();
-
-            if (self::checkFileFormat($students[0])) {
+            $students = $sheet->toArray();  if (self::checkFileFormat($students[0])) {
                 return abort(406, '文件格式错误');
             }
             unset($students[0]);
@@ -299,40 +284,53 @@ class Student extends Model
                 }
                 self::checkData($students);
             }
-            $data['user'] = Auth::user();
-            $data['type'] = 'student';
+
             return [
                 'statusCode' => 200,
                 'message' => '上传成功'
             ];
+//            $res = Excel::load($filePath, function($reader) {
+////                $data = $reader->all();
+//                $reader = $reader->getSheet(0);
+//
+//                //获取表中的数据
+//                $students = $reader->toArray();
+//
+////                $data['user'] = Auth::user();
+//            });
+
         }
-        return abort(500, '上传失败');
+        return [
+            'statusCode' => 500,
+        ];
+
     }
 
     /**
      *  检查每行数据 是否符合导入数据
      * @param array $data
+     * @return bool
+     * @throws Exception
      */
     private static function checkData(array $data) {
         $rules = [
-            'name' => 'required|string|between:2,6',
+            'realname' => 'required|string|between:2,255',
+            'username' => 'required|string|between:2,64',
             'gender' => [
                 'required',
                 Rule::in(['男', '女']),
             ],
-            // 'birthday' => ['required', 'string', 'regex:/^((19\d{2})|(20\d{2}))-([1-12])-([1-31])$/'],
-            'birthday' => 'required|date',
-            'school' => 'required|string|between:4,20',
-            'grade' => 'required|string|between:3,20',
-            'class' => 'required|string|between:2,20',
-            'student_number' => 'required|alphanum|between:2,32',
-            'card_number' => 'required|alphanum|between:2,32',
-            'oncampus' => [
-                'required',
-                Rule::in(['住读', '走读']),
-            ],
-            'remark' => 'string|nullable',
-            'relationship' => 'string',
+
+            'school' => 'required|string|between:4,128',
+            'grade' => 'required|string|between:3,255',
+            'class' => 'required|string|between:2,555',
+            'qq' => 'nullable|alphanum|between:6,11',
+            'wechat' => 'nullable|alphanum|between:2,32',
+            'mobile' =>  ['nullable', 'string', 'regex:/^0?(13|14|15|17|18)[0-9]{9}$/'],
+            'duty' => 'nullable|string',
+            'address' => 'nullable|string|between:2,255',
+            'hobby' => 'nullable|string|between:2,255',
+            'specialty' => 'nullable|string|between:2,255',
         ];
         // Validator::make($data,$rules);
         # 不合法的数据
@@ -344,20 +342,21 @@ class Student extends Model
         for ($i = 0; $i < count($data); $i++) {
             $datum = $data[$i];
             $user = [
-                'name' => $datum[0],
-                'gender' => $datum[1],
-                'birthday' => $datum[2],
+                'realname' => $datum[0],
+                'username' => $datum[1],
+                'gender' => $datum[2],
                 'school' => $datum[3],
                 'grade' => $datum[4],
                 'class' => $datum[5],
-                'mobile' => $datum[6],
-                'student_number' => $datum[7],
-                'card_number' => $datum[8],
-                'oncampus' => $datum[9],
-                'remark' => $datum[10],
-                'relationship' => $datum[11],
-                'class_id' => 0,
-                'department_id' => 0,
+                'qq' => $datum[6],
+                'wechat' => $datum[7],
+                'mobile' => $datum[8],
+                'duty' => $datum[9],
+                'star' => $datum[10],
+                'address' => $datum[11],
+                'hobby' => $datum[12],
+                'specialty' => $datum[13],
+
             ];
 //            gmdate("Y-m-d H:i:s", PHPExcel_Shared_Date::ExcelToPHP($datum[2]));
             $status = Validator::make($user, $rules);
@@ -390,17 +389,11 @@ class Student extends Model
                 unset($data[$i]);
                 continue;
             }
-            $student = Student::whereStudentNumber($user['student_number'])
-                ->where('class_id', $class->id)
-                ->first();
             $user['class_id'] = $class->id;
-            $deptId = self::deptId($user['school'], $user['grade'], $user['class']);
-            $user['department_id'] = $deptId;
-//            if ($user['department_id'] == 0) {
-//                $invalidRows[] = $datum;
-//                unset($data[$i]);
-//                continue;
-//            }
+            # 检查学生是否存在
+            $student = User::where('username',$user['username'])
+                ->first();
+
             # 学生数据已存在 更新操作
             if ($student) {
                 $updateRows[] = $user;
@@ -408,6 +401,16 @@ class Student extends Model
                 $rows[] = $user;
             }
             unset($user);
+
+        }
+        if(sizeof($rows)!=0)
+        {
+            $res = Student::createStudent($rows);
+            return $res ? true : false;
+        }
+        if(sizeof($updateRows)!=0){
+            $res = Student::updateStudent($updateRows);
+            return $res ? true : false;
         }
 
     }
@@ -421,6 +424,95 @@ class Student extends Model
 
         return count(array_diff(self::EXCEL_FILE_TITLE, $fileTitle)) != 0;
 
+    }
+
+    /**
+     * @param array $rows
+     * @return bool
+     * @throws Exception
+     */
+    public static function createStudent(array $rows)
+    {
+        try {
+            DB::transaction(function () use ($rows) {
+                foreach ($rows as $r){
+                    #创建用户
+                    $user = User::create([
+                        'realname'=>$r['realname'],
+                        'password'   => bcrypt('123456'),
+                        'username'=>$r['username'],
+                        'gender'  => $r['gender'] == '男' ? '1' : '0',
+                        'mobile' => $r['mobile'],
+                        'qq' => $r['qq'],
+                        'wechat' => $r['wechat'],
+                        'role_id' => 4,
+                        'enabled'       => 1,
+                    ]);
+
+                    # 创建学生
+                    $s = Student::create([
+                        'user_id'        => $user['id'],
+                        'class_id'       => $r['class_id'],
+                        'duty'       => $r['duty'],
+                        'star'       => $r['star'],
+                        'address'       => $r['address'],
+                        'hobby'       => $r['hobby'],
+                        'specialty'       => $r['specialty'],
+                        'enabled'       => 1,
+                    ]);
+                }
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * 更新用户和学生信息
+     *
+     * @param array $updateRows
+     * @return bool
+     * @throws Exception
+     */
+    public static function updateStudent(array $updateRows)
+    {
+        try {
+            DB::transaction(function () use ($updateRows) {
+                foreach ($updateRows as $u){
+                    $user = User::whereUsername($u['username'])->first();
+                    #更新用户
+                    $user->update([
+                        'realname'=>$u['realname'],
+                        'password'   => bcrypt('123456'),
+                        'username'=>$u['username'],
+                        'gender'  => $u['gender'] == '男' ? '1' : '0',
+                        'mobile' => $u['mobile'],
+                        'qq' => $u['qq'],
+                        'wechat' => $u['wechat'],
+                        'role_id' => 4,
+                        'enabled'       => 1,
+                    ]);
+
+                    # 更新学生
+                    $s = Student::whereUserId($user->id)->update([
+                        'user_id'        => $user['id'],
+                        'class_id'       => $u['class_id'],
+                        'duty'       => $u['duty'],
+                        'star'       => $u['star'],
+                        'address'       => $u['address'],
+                        'hobby'       => $u['hobby'],
+                        'specialty'       => $u['specialty'],
+                        'enabled'       => 1,
+                    ]);
+                }
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return true;
     }
 
 }

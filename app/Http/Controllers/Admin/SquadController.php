@@ -8,6 +8,7 @@ use App\Models\School;
 use App\Models\Squad;
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -190,9 +191,23 @@ class SquadController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete($id) {
-        return $this->squad->remove($id)
-            ? response()->json(['statusCode' => 200]) :
-            response()->json(['statusCode' => 400]);
+        $classIds = User::getClassId();
+        if(in_array($id,$classIds)){
+            $squad = Squad::find($id);
+            if(sizeof($squad->students)!=0){
+                return response()->json(['statusCode' => 201]);
+            }
+            if(sizeof($squad->squadVideos)!=0){
+                return response()->json(['statusCode' => 202]);
+            }
+            return $this->squad->remove($id)
+                ? response()->json(['statusCode' => 200]) :
+                response()->json(['statusCode' => 400]);
+        }else{
+            return response()->json(['statusCode' => 404]);
+
+        }
+
     }
 
 

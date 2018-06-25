@@ -19,7 +19,7 @@ function initDatatable() {
 initDatatable();
 
 $(document).on('click', '.fa-trash', function () {
-    var result = confirm("是否确认删除该年级?");
+    var result = confirm("是否确认删除该相册?");
     var id = $(this).parents().eq(0).attr('id');
     if(result){
         $.ajax({
@@ -27,6 +27,31 @@ $(document).on('click', '.fa-trash', function () {
             dataType:'json',
             data:{ _token: $('#csrf_token').attr('content')},
             url:'../pictures/delete/'+id,
+            success:function (result) {
+                if(result.statusCode === 200){
+                    $.gritter.add({title: '操作结果', text: '删除成功', image:'../image/confirm.png'});
+                    table.fnDestroy();
+                    initDatatable();
+
+                }else{
+                    $.gritter.add({title: '操作结果', text: '删除失败', image:'../image/error.png'});
+                }
+            }
+        })
+    }
+});
+
+$('.photos-item-delete').on('click', function () {
+    var result = confirm("是否确认删除该图片?");
+
+    var id = $('#picture-id').val();
+    alert(id);return false;
+    if(result){
+        $.ajax({
+            type:'DELETE',
+            dataType:'json',
+            data:{ _token: $('#csrf_token').attr('content')},
+            // url:'../pictures/delete/'+id,
             success:function (result) {
                 if(result.statusCode === 200){
                     $.gritter.add({title: '操作结果', text: '删除成功', image:'../image/confirm.png'});

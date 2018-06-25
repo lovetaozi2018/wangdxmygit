@@ -28,10 +28,10 @@
     </div>
 </div>
 @endsection
-<style>
-    tbody td{
-        height: 110px;
-        line-height: 110px!important;
-        vertical-align: middle!important;
-    }
-</style>
+{{--<style>--}}
+    {{--tbody td{--}}
+        {{--height: 110px;--}}
+        {{--line-height: 110px!important;--}}
+        {{--vertical-align: middle!important;--}}
+    {{--}--}}
+{{--</style>--}}

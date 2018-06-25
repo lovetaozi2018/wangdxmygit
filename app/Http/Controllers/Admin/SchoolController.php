@@ -106,13 +106,28 @@ class SchoolController extends Controller
      * 删除
      *
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return string
      * @throws \Exception
      */
     public function delete($id) {
-        return $this->school->remove($id)
-            ? response()->json(['statusCode' => 200]) :
-            response()->json(['statusCode' => 400]);
+        $schoolIds = User::getSchoolId();
+        if(in_array($id,$schoolIds)){
+            $school = School::find($id);
+            $grades = $school->grades;
+            # 判断学校下面是否还有年级
+            if(sizeof($grades)!=0){
+                return response()->json(['statusCode' => 201]);
+            }
+            if(sizeof($school->schoolVideos)!=0){
+                return response()->json(['statusCode' => 202]);
+            }
+            return $this->school->remove($id)
+                ? response()->json(['statusCode' => 200]) :
+                response()->json(['statusCode' => 400]);
+        }else{
+            return response()->json(['statusCode' => 404]);
+        }
+
     }
 
 }

@@ -62,9 +62,11 @@ $import.on('click', function () {
             success: function (result) {
                 console.log(result);
                 if (result.statusCode === 200) {
-                    $.gritter.add({title: '操作结果', text: '删除成功', image:'../image/confirm.png'});
+                    $.gritter.add({title: '操作结果', text: '导入成功', image:'../image/confirm.png'});
+                    table.fnDestroy();
+                    initDatatable();
                 } else {
-                    $.gritter.add({title: '操作结果', text: '删除失败', image:'../image/failure.jpg'});
+                    $.gritter.add({title: '操作结果', text: '导入失败', image:'../image/failure.jpg'});
                 }
             },
             // error: function (result) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Album;
 use App\Models\Picture;
 use App\Models\School;
 use App\Models\Squad;
@@ -14,11 +15,13 @@ class PictureController extends Controller
 {
     protected $picture;
     protected $user;
+    protected $album;
 
-    function __construct(Picture $picture,User $user) {
+    function __construct(Picture $picture,User $user,Album $album) {
 //        $this->middleware(['auth']);
         $this->picture = $picture;
         $this->user = $user;
+        $this->album = $album;
 
     }
 
@@ -30,7 +33,7 @@ class PictureController extends Controller
     public function index()
     {
         if (Request::get('draw')) {
-            return response()->json($this->picture->datatable());
+            return response()->json($this->album->datatable());
 
         }
         return view('admin.picture.index', [
@@ -120,7 +123,7 @@ class PictureController extends Controller
         }
 
         $picture = $this->picture->find($id);
-
+        $picture->name = $picture->album->name;
         foreach ($classes as $k=>$c){
             $classes[$k] = $c.'--'.Squad::find($k)->grade->school->name;
         }
@@ -158,5 +161,24 @@ class PictureController extends Controller
         return $this->picture->remove($id)
             ? response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
+    }
+
+    /**
+     * 详情
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function detail($id)
+    {
+        $album = Album::find($id);
+        $pictures = Picture::whereAlbumId($album->id)
+            ->where('class_id',$album->class_id)
+            ->get();
+        return view('admin.picture.detail', [
+            'album' => $album,
+            'pictures' =>$pictures,
+            'js' => '../../js/admin/picture/detail.js',
+        ]);
     }
 }
