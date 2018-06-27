@@ -194,6 +194,8 @@ class User extends Authenticatable
         return $user->update($data) ? true : false;
     }
 
+
+
     /**
      * @param $file
      * @param $filePath

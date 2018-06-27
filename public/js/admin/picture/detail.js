@@ -53,3 +53,30 @@ function photoView(obj) {
     //此处写调试日志
     console.log(img_index);
 }
+
+$('.photos-item-delete').click(function () {
+
+    var result = confirm("是否确认删除该图片?");
+    var inputElem = $(this).siblings('input');
+    var id = inputElem.val();
+    console.log(id);
+
+    if(result){
+        $.ajax({
+            type:'DELETE',
+            dataType:'json',
+            data:{ _token: $('#csrf_token').attr('content')},
+            url:'../pictures/delete/'+id,
+            success:function (result) {
+                if(result.statusCode === 200){
+                    $.gritter.add({title: '操作结果', text: '删除成功', image:'../image/confirm.png'});
+                    table.fnDestroy();
+                    initDatatable();
+
+                }else{
+                    $.gritter.add({title: '操作结果', text: '删除失败', image:'../image/error.png'});
+                }
+            }
+        })
+    }
+});

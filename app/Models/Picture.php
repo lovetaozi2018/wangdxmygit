@@ -199,6 +199,7 @@ class Picture extends Model
      *
      * @param $id
      * @return bool
+     * @throws Exception
      */
     public function remove($id)
     {

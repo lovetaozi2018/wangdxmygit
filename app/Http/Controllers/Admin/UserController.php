@@ -32,8 +32,11 @@ class UserController extends Controller
     }
 
     public function edit($id) {
-
-
+        if(Auth::user()->role_id == 2){
+            if($id != Auth::id()){
+                return '你没有权限访问此页面!';
+            }
+        }
         $user = $this->user->find($id);
         return view('admin.user.edit', [
             'user' => $user,
@@ -63,6 +66,10 @@ class UserController extends Controller
             response()->json(['statusCode' => 400]);
     }
 
+    public function delete($id)
+    {
+
+    }
 
 
     /**

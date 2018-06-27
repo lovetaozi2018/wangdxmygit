@@ -15,8 +15,11 @@
 Route::get('/', function () {
     return redirect('login');
 });
-Route::get('home', function () {
+Route::get('/home', function () {
     return redirect('login');
+});
+Route::get('/home', function () {
+    return redirect('grades/index');
 });
 Auth::routes();
 Route::any('register', function() {
@@ -99,6 +102,8 @@ Route::group(['namespace' => 'Admin'], function () {
         Route::get('pictures/detail/{id}', 'PictureController@detail');
         Route::post('pictures/update/{id}', 'PictureController@update');
         Route::delete('pictures/delete/{id}', 'PictureController@delete');
+        Route::delete('album/remove/{id}', 'PictureController@remove');
+
         # 班级视频
         Route::get('squadVideos/index', 'SquadVideoController@index');
         Route::get('squadVideos/create', 'SquadVideoController@create');

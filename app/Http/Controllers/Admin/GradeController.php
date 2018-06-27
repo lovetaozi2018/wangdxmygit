@@ -79,6 +79,9 @@ class GradeController extends Controller
     }
 
     public function edit($id) {
+
+        $grade = $this->grade->find($id);
+
         $user = Auth::user();
         $roleId = $user->role_id;
 
@@ -86,11 +89,18 @@ class GradeController extends Controller
         if($roleId == 2){
             $schoolId = $user->school_id;
             $schools = School::whereEnabled(1)->whereId($schoolId)->get()->pluck('name', 'id');
+            $grades = Grade::whereSchoolId($schoolId)->get(['id','name']);
+            $gradeIds = [];
+            foreach ($grades as $g){
+                $gradeIds[] = $g->id;
+            }
+            if(!in_array($id,$gradeIds)){
+                return redirect('grades/index');
+            }
         }else{
             $schools = School::whereEnabled(1)->get()->pluck('name', 'id');
         }
 
-        $grade = $this->grade->find($id);
         return view('admin.grade.edit', [
             'grade' => $grade,
             'schools' => $schools,

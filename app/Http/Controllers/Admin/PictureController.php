@@ -151,7 +151,20 @@ class PictureController extends Controller
     }
 
     /**
-     * 删除
+     * 删除相册
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function remove($id)
+    {
+        return $this->album->remove($id)
+            ? response()->json(['statusCode' => 200]) :
+            response()->json(['statusCode' => 400]);
+    }
+    /**
+     * 删除图片
      *
      * @param $id
      * @return \Illuminate\Http\JsonResponse

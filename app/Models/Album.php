@@ -6,9 +6,11 @@ namespace App\Models;
 use App\Helpers\Datatable;
 use Carbon\Carbon;
 use Eloquent;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\Album 相册
@@ -113,6 +115,38 @@ class Album extends Model
         }
         return $this->simple($this, $columns,$joins,$condition);
 
+    }
+
+    /**
+     * 删除相册
+     *
+     * @param $id
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function remove($id) {
+        try {
+            DB::transaction(function () use ($id) {
+                $album = Album::find($id);
+                $classId = $album->class_id;
+                $pictures = Picture::whereAlbumId($id)
+                    ->where('class_id',$classId)
+                    ->get();
+                foreach ($pictures as $p){
+                    $image = env('APP_URL').$p->path;
+                    if ($image && is_file($image)) {
+                        unlink($image);
+                    }
+                }
+
+                $album->delete();
+
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+        return true;
     }
 
 

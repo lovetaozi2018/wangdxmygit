@@ -19,14 +19,14 @@ function initDatatable() {
 initDatatable();
 
 $(document).on('click', '.fa-trash', function () {
-    var result = confirm("是否确认删除该相册?");
+    var result = confirm("是否确认删除该相册以及该相册下的所有照片吗?");
     var id = $(this).parents().eq(0).attr('id');
     if(result){
         $.ajax({
             type:'DELETE',
             dataType:'json',
             data:{ _token: $('#csrf_token').attr('content')},
-            url:'../pictures/delete/'+id,
+            url:'../album/remove/'+id,
             success:function (result) {
                 if(result.statusCode === 200){
                     $.gritter.add({title: '操作结果', text: '删除成功', image:'../image/confirm.png'});
