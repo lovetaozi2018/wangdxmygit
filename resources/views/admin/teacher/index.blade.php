@@ -52,7 +52,7 @@
 
                             <div class="col-sm-6">
                                 <input type="file" id="fileupload" accept=".xls,.xlsx" name="file">
-                                <p class="help-block">下载<a href="{{URL::asset('files/students.xlsx')}}">模板</a></p>
+                                <p class="help-block">下载<a href="{{URL::asset('files/teachers.xlsx')}}">模板</a></p>
                             </div>
                         </div>
                     </div>

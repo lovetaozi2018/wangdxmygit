@@ -1,10 +1,10 @@
 @extends('layouts.master')
 @section('content')
-    {!! Form::model($admin,[
+    {!! Form::model($user,[
         'method' => 'PUT',
-        'id' => 'formAdmin',
+        'id' => 'formUser',
         'data-parsley-validate' => 'true'
     ]) !!}
-    @include('user.create_edit')
+    @include('admin.user.create_edit')
     {!! Form::close() !!}
 @endsection

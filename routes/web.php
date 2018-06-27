@@ -46,6 +46,8 @@ Route::group(['namespace' => 'Admin'], function () {
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('users/index', 'UserController@index');
+        Route::get('users/edit/{id}', 'UserController@edit');
+        Route::put('users/update/{id}', 'UserController@update');
         Route::any('users/reset', 'UserController@reset');
         # 学校管理
         Route::get('schools/index', 'SchoolController@index');

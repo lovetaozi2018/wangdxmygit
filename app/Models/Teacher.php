@@ -10,6 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\UploadedFile;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Readers\LaravelExcelReader;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use PHPExcel_Exception;
+
 
 /**
  * App\Models\Teacher 教师
@@ -34,6 +41,10 @@ class Teacher extends Model
 {
 
     use Datatable;
+    const EXCEL_FILE_TITLE = [
+        '姓名', '账号', '性别', '学校',
+        'QQ','微信', '手机号码', '班主任','科目'
+    ];
 
     protected $table='teachers';
 
@@ -217,6 +228,245 @@ class Teacher extends Model
         } catch (Exception $e) {
             throw $e;
         }
+        return true;
+    }
+
+    /**
+     * 导入
+     *
+     * @param UploadedFile $file
+     * @return array
+     * @throws Exception
+     */
+    static function upload(UploadedFile $file) {
+        $path = public_path().'/uploads/files/';
+        $file = User::uploadedMedias($file,$path);
+        if ($file) {
+            $filePath = public_path().'/uploads/files/'.$file['filename'];
+            $reader = Excel::load($filePath);
+            $sheet = $reader->getExcel()->getSheet(0);
+            $teachers = $sheet->toArray();  if (self::checkFileFormat($teachers[0])) {
+                return abort(406, '文件格式错误');
+            }
+            unset($teachers[0]);
+            $teachers = array_values($teachers);
+            if (count($teachers) != 0) {
+                # 去除表格的空数据
+                foreach ($teachers as $key => $v) {
+                    if ((array_filter($v)) == null) {
+                        unset($teachers[$key]);
+                    }
+                }
+                self::checkData($teachers);
+            }
+
+            return [
+                'statusCode' => 200,
+                'message' => '上传成功'
+            ];
+//            $res = Excel::load($filePath, function($reader) {
+////                $data = $reader->all();
+//                $reader = $reader->getSheet(0);
+//
+//                //获取表中的数据
+//                $students = $reader->toArray();
+//
+////                $data['user'] = Auth::user();
+//            });
+
+        }
+        return [
+            'statusCode' => 500,
+        ];
+
+    }
+
+    /**
+     *  检查每行数据 是否符合导入数据
+     * @param array $data
+     * @return bool
+     * @throws Exception
+     */
+    private static function checkData(array $data) {
+        $rules = [
+            'realname' => 'required|string|between:2,255',
+            'username' => 'required|string|between:2,64',
+            'gender' => [
+                'required',
+                Rule::in(['男', '女']),
+            ],
+
+            'school' => 'required|string|between:4,128',
+            'qq' => 'nullable|alphanum|between:6,11',
+            'wechat' => 'nullable|alphanum|between:2,32',
+            'mobile' =>  ['required', 'string', 'regex:/^0?(13|14|15|17|18)[0-9]{9}$/'],
+            'status' => [
+                'nullable',
+                Rule::in(['是', '否']),
+            ],
+            'subject' => 'required|string|between:2,255',
+        ];
+        // Validator::make($data,$rules);
+        # 不合法的数据
+        $invalidRows = [];
+        # 更新的数据
+        $updateRows = [];
+        # 需要添加的数据
+        $rows = [];
+        for ($i = 0; $i < count($data); $i++) {
+            $datum = $data[$i];
+            $user = [
+                'realname' => $datum[0],
+                'username' => $datum[1],
+                'gender' => $datum[2],
+                'school' => $datum[3],
+                'qq' => $datum[4],
+                'wechat' => $datum[5],
+                'mobile' => $datum[6],
+                'status' => $datum[7],
+                'subject' => $datum[8],
+
+            ];
+//            gmdate("Y-m-d H:i:s", PHPExcel_Shared_Date::ExcelToPHP($datum[2]));
+            $status = Validator::make($user, $rules);
+            if ($status->fails()) {
+                $invalidRows[] = $datum;
+                unset($data[$i]);
+                continue;
+            }
+            $school = School::whereName($user['school'])->first();
+            if (!$school) {
+                $invalidRows[] = $datum;
+                unset($data[$i]);
+                continue;
+
+            }
+            $roleId = Auth::user()->role_id;
+
+            # 如果是学校管理员不能导入其他学校的数据
+            if($roleId == 2){
+                $schoolId = Auth::user()->school_id;
+                if($school->id != $schoolId){
+                    unset($data[$i]);
+                    continue;
+                }
+            }
+            $user['school_id'] = $school->id;
+            # 检查教师是否存在
+            $teacher = User::where('username',$user['username'])
+                ->first();
+
+            # 学生数据已存在 更新操作
+            if ($teacher) {
+                $updateRows[] = $user;
+            } else {
+                $rows[] = $user;
+            }
+            unset($user);
+
+        }
+        if(sizeof($rows)!=0)
+        {
+            $res = Teacher::createTeacher($rows);
+            return $res ? true : false;
+        }
+        if(sizeof($updateRows)!=0){
+            $res = Teacher::updateTeacher($updateRows);
+            return $res ? true : false;
+        }
+
+    }
+
+    /**
+     * 检查表头是否合法
+     * @param array $fileTitle
+     * @return bool
+     */
+    private static function checkFileFormat(array $fileTitle) {
+
+        return count(array_diff(self::EXCEL_FILE_TITLE, $fileTitle)) != 0;
+
+    }
+
+    /**
+     * @param array $rows
+     * @return bool
+     * @throws Exception
+     */
+    public static function createTeacher(array $rows)
+    {
+        try {
+            DB::transaction(function () use ($rows) {
+                foreach ($rows as $r){
+                    #创建用户
+                    $user = User::create([
+                        'realname'=>$r['realname'],
+                        'password'   => bcrypt('123456'),
+                        'username'=>$r['username'],
+                        'gender'  => $r['gender'] == '男' ? '1' : '0',
+                        'mobile' => $r['mobile'],
+                        'qq' => $r['qq'],
+                        'wechat' => $r['wechat'],
+                        'role_id' => 3,
+                        'enabled'       => 1,
+                    ]);
+
+                    # 创建老师
+                    $s = Teacher::create([
+                        'user_id'        => $user['id'],
+                        'school_id'       => $r['school_id'],
+                        'status'       => $r['status']=='是' ? '1' : '0',
+                        'subject'       => $r['subject'],
+                        'enabled'       => 1,
+                    ]);
+                }
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * 更新用户和老师信息
+     *
+     * @param array $updateRows
+     * @return bool
+     * @throws Exception
+     */
+    public static function updateTeacher(array $updateRows)
+    {
+        try {
+            DB::transaction(function () use ($updateRows) {
+                foreach ($updateRows as $u){
+                    $user = User::whereUsername($u['username'])->first();
+                    #更新用户
+                    $user->update([
+                        'realname'=>$u['realname'],
+                        'password'   => bcrypt('123456'),
+                        'username'=>$u['username'],
+                        'gender'  => $u['gender'] == '男' ? '1' : '0',
+                        'mobile' => $u['mobile'],
+                        'qq' => $u['qq'],
+                        'wechat' => $u['wechat'],
+                        'role_id' => 3,
+                        'enabled'       => 1,
+                    ]);
+
+                    # 更新老师
+                    $s = Teacher::whereUserId($user->id)->update([
+                        'school_id'       => $u['school_id'],
+                        'status'       => $u['status']=='是' ? '1' : '0',
+                        'subject'       => $u['subject'],
+                        'enabled'       => 1,
+                    ]);
+                }
+            });
+        } catch (Exception $e) {
+            throw $e;
+        }
+
         return true;
     }
 

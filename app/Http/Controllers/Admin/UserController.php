@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Request;
 
 class UserController extends Controller
 {
@@ -29,6 +30,39 @@ class UserController extends Controller
             'js' => '../js/admin/user/index.js',
         ]);
     }
+
+    public function edit($id) {
+
+
+        $user = $this->user->find($id);
+        return view('admin.user.edit', [
+            'user' => $user,
+            'js' => '../../js/admin/user/edit.js',
+        ]);
+
+    }
+
+    /**
+     * 更新管理员
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function update(UserRequest $request,$id)
+    {
+        $data = $request->all();
+        $user = User::whereMobile($data['mobile'])
+            ->where('id','!=',$id)
+            ->first();
+        if($user){
+            return response()->json(['status'=>201]);
+        }
+        return $this->user->updateUser($data,$id) ?
+            response()->json(['statusCode' => 200]) :
+            response()->json(['statusCode' => 400]);
+    }
+
 
 
     /**

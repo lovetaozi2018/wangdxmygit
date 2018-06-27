@@ -372,6 +372,16 @@ class Student extends Model
                 continue;
 
             }
+            $roleId = Auth::user()->role_id;
+            # 如果是学校管理员不能导入其他学校的数据
+            if($roleId == 2){
+                $schoolId = Auth::user()->school_id;
+                if($school->id != $schoolId){
+                    unset($data[$i]);
+                    continue;
+                }
+            }
+            
             $grade = Grade::whereName($user['grade'])
                 ->where('school_id', $school->id)
                 ->first();
@@ -389,6 +399,8 @@ class Student extends Model
                 unset($data[$i]);
                 continue;
             }
+
+
             $user['class_id'] = $class->id;
             # 检查学生是否存在
             $student = User::where('username',$user['username'])
@@ -497,7 +509,6 @@ class Student extends Model
 
                     # 更新学生
                     $s = Student::whereUserId($user->id)->update([
-                        'user_id'        => $user['id'],
                         'class_id'       => $u['class_id'],
                         'duty'       => $u['duty'],
                         'star'       => $u['star'],

@@ -138,4 +138,31 @@ class TeacherController extends Controller
             ? response()->json(['statusCode' => 200]) :
             response()->json(['statusCode' => 400]);
     }
+
+    /**
+     * 导入学籍
+     * @return \Illuminate\Http\JsonResponse|null
+     * @throws \Exception
+     */
+    public function import() {
+
+        if (Request::isMethod('post')) {
+            $file = Request::file('file');
+            if (empty($file)) {
+                $result = [
+                    'statusCode' => 500,
+                    'message'    => '您还没选择文件！',
+                ];
+                return response()->json($result);
+            }
+            // 文件是否上传成功
+            if ($file->isValid()) {
+                $result = Teacher::upload($file);
+                return response()->json($result);
+            }
+        }
+
+        return null;
+
+    }
 }

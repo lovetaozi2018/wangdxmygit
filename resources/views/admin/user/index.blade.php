@@ -4,9 +4,9 @@
     <div class="box-header with-border">
         <span id="breadcrumb" style="color: #999; font-size: 13px;">管理员/管理员列表</span>
         <div class="box-tools pull-right">
-            <button id="add-record" type="button" class="btn btn-box-tool">
-                <a href="{{url('admins/create')}}"><i class="fa fa-plus text-blue"> 新增</i></a>
-            </button>
+            {{--<button id="add-record" type="button" class="btn btn-box-tool">--}}
+                {{--<a href="{{url('admins/create')}}"><i class="fa fa-plus text-blue"> 新增</i></a>--}}
+            {{--</button>--}}
         </div>
     </div>
     <div class="box-body">

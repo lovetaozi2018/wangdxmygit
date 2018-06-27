@@ -165,7 +165,6 @@ class User extends Authenticatable
 
                         if ($row['id'] == Auth::id()) {
                             $status .= '&nbsp;<a id=' . $row['id'] . ' href="edit/' . $row['id'] . '" class="btn btn-success btn-icon btn-circle btn-xs"><i class="fa fa-edit"></i></a>';
-                            $status .= '&nbsp;<a id=' . $row['id'] . ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal"><i class="fa fa-trash"></i></a>';
 
                         }else{
                             $status .= '&nbsp;<a id=' . $row['id'] . ' href="javascript:void(0)" class="btn btn-danger btn-icon btn-circle btn-xs" data-toggle="modal"><i class="fa fa-trash"></i></a>';
@@ -187,6 +186,12 @@ class User extends Authenticatable
             $condition = 'User.id ='.Auth::id();
         }
         return $this->simple($this, $columns,null,$condition);
+    }
+
+    public function updateUser(array $data,$id)
+    {
+        $user = $this->find($id);
+        return $user->update($data) ? true : false;
     }
 
     /**
@@ -236,8 +241,7 @@ class User extends Authenticatable
      */
     public static function modify(array $data)
     {
-//        $userId = Auth::id();
-        $userId = 5;
+        $userId = Auth::id();
         try {
             DB::transaction(function () use ($data,$userId) {
                 $userData =[

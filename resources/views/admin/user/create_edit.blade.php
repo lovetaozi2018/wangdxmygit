@@ -3,15 +3,15 @@
         <span id="breadcrumb" style="color: #999; font-size: 13px;">首页/创建管理员</span>
         <div class="box-tools pull-right">
             <button id="record-list" type="button" class="btn btn-box-tool">
-                <a href="{{url('admins/index')}}"><i class="fa fa-mail-reply text-blue"> 返回列表</i></a>
+                <a href="{{url('users/index')}}"><i class="fa fa-mail-reply text-blue"> 返回列表</i></a>
             </button>
         </div>
     </div>
     <div class="box-body">
         <div class="form-horizontal">
             {{ csrf_field() }}
-            @if(isset($admin['id']))
-                {{ Form::hidden('id', $admin['id'], ['id' => 'id']) }}
+            @if(isset($user['id']))
+                {{ Form::hidden('id', $user['id'], ['id' => 'id']) }}
             @endif
             <div class="form-group">
                 {{ Form::label('username', '用户名', [
@@ -26,7 +26,22 @@
                 ]) }}
                 </div>
             </div>
-            <div class="form-group">
+
+            @if(isset($user))
+                <div class="form-group">
+                    <label for="realname" class="col-sm-3 control-label">真实姓名</label>
+                    <div class="col-sm-6">
+                        <input class="form-control"  placeholder="(请填写真实姓名)"
+                               data-parsley-length="[2, 255]"
+                               name="realname"
+                               type="text"
+                               value="{{$user['realname']}}"
+                               disabled="disabled"
+                               id="realname">
+                    </div>
+                </div>
+            @else
+                <div class="form-group">
                 {{ Form::label('realname', '真实姓名', [
                 'class' => 'col-sm-3 control-label'
                 ]) }}
@@ -39,6 +54,7 @@
                     ]) }}
                 </div>
             </div>
+            @endif
             <div class="form-group">
                 <label for="gender" class="col-sm-3 control-label">性别</label>
                 <div class="col-sm-6">
@@ -50,29 +66,29 @@
                     </label> 女
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">密码</label>
+            {{--<div class="form-group">--}}
+                {{--<label class="col-sm-3 control-label">密码</label>--}}
 
-                <div class="col-sm-6">
-                    <input type="password" name="password" id="pwd1" class="form-control"
-                           required placeholder="(请填写密码)"
-                           data-parsley-length="[2,16]"
-                           data-parsley-type="alphanum"
+                {{--<div class="col-sm-6">--}}
+                    {{--<input type="password" name="password" id="pwd1" class="form-control"--}}
+                           {{--required placeholder="(请填写密码)"--}}
+                           {{--data-parsley-length="[2,16]"--}}
+                           {{--data-parsley-type="alphanum"--}}
 
-                    >
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">确认密码</label>
+                    {{-->--}}
+                {{--</div>--}}
+            {{--</div>--}}
+            {{--<div class="form-group">--}}
+                {{--<label class="col-sm-3 control-label">确认密码</label>--}}
 
-                <div class="col-sm-6">
-                    <input type="password" name="password" id="pwd2" class="form-control"
-                           required placeholder="(请填写密码)"
-                           data-parsley-length="[2,16]"
-                           data-parsley-type="alphanum"
-                    >
-                </div>
-            </div>
+                {{--<div class="col-sm-6">--}}
+                    {{--<input type="password" name="password" id="pwd2" class="form-control"--}}
+                           {{--required placeholder="(请填写密码)"--}}
+                           {{--data-parsley-length="[2,16]"--}}
+                           {{--data-parsley-type="alphanum"--}}
+                    {{-->--}}
+                {{--</div>--}}
+            {{--</div>--}}
             <div class="form-group">
                 {{ Form::label('mobile', '手机号码', [
                     'class' => 'col-sm-3 control-label'
@@ -90,8 +106,17 @@
             @include('layouts.enabled', [
                 'label' => '是否启用',
                 'id' => 'enabled',
+                'value' => isset($user['enabled']) ? $user['enabled'] : NULL,
+
             ])
         </div>
     </div>
     @include('layouts.form_buttons')
 </div>
+<style>
+    input:disabled{
+        border: 1px solid #DDD;
+        background-color: #F5F5F5;
+        color:#ACA899;
+    }
+</style>
